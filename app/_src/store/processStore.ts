@@ -1,11 +1,14 @@
 import { create } from "zustand";
 import type { Process, Subprocess, Task } from "../types/process";
+import { STORAGE_KEYS } from "./constants";
 
 interface ProcessStore {
   processes: Process[];
   selectedProcess: Process | null;
   selectedSubprocess: (Subprocess & { processId: string }) | null;
   selectedTask: (Task & { processId: string; subprocessId: string }) | null;
+  isLoading: boolean;
+  error: string | null;
   setProcesses: (processes: Process[]) => void;
   setSelectedProcess: (process: Process | null) => void;
   setSelectedSubprocess: (
@@ -14,6 +17,7 @@ interface ProcessStore {
   setSelectedTask: (
     task: (Task & { processId: string; subprocessId: string }) | null
   ) => void;
+  initializeProcesses: () => Promise<void>;
   getSubprocesses: () => (Subprocess & { processId: string })[];
   getTasks: () => (Task & { processId: string; subprocessId: string })[];
   updateProcess: (processId: string, updates: Partial<Process>) => void;
@@ -47,11 +51,49 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
   selectedProcess: null,
   selectedSubprocess: null,
   selectedTask: null,
-  setProcesses: (processes) => set({ processes }),
+  isLoading: false,
+  error: null,
+  setProcesses: (processes) => {
+    set({ processes });
+    if (typeof window !== "undefined") {
+      localStorage.setItem(STORAGE_KEYS.PROCESSES, JSON.stringify(processes));
+    }
+  },
   setSelectedProcess: (process) => set({ selectedProcess: process }),
   setSelectedSubprocess: (subprocess) =>
     set({ selectedSubprocess: subprocess }),
   setSelectedTask: (task) => set({ selectedTask: task }),
+  initializeProcesses: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      // Check localStorage first
+      if (typeof window !== "undefined") {
+        const cached = localStorage.getItem(STORAGE_KEYS.PROCESSES);
+        if (cached) {
+          set({ processes: JSON.parse(cached), isLoading: false });
+          return;
+        }
+      }
+
+      // Simulate real-world delay
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      // Fetch from API
+      const response = await fetch("/data/processes.json");
+      if (!response.ok) throw new Error("Failed to fetch processes");
+      const processes = await response.json();
+
+      // Persist to localStorage
+      if (typeof window !== "undefined") {
+        localStorage.setItem(STORAGE_KEYS.PROCESSES, JSON.stringify(processes));
+      }
+      set({ processes, isLoading: false });
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      set({ error: errorMessage, isLoading: false });
+    }
+  },
   getSubprocesses: () => {
     const state = get();
     return state.processes.flatMap((p) =>

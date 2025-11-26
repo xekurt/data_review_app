@@ -1,0 +1,494 @@
+{
+    "processes": [
+        {
+            "id": "proc1",
+            "name": "Drug Formulation",
+            "description": "The process of combining active pharmaceutical ingredients with excipients to create the final drug product.",
+            "status": "Pending",
+            "lastUpdatedBy": "System",
+            "lastUpdatedAt": "2025-11-01T10:00:00Z",
+            "subprocesses": [
+                {
+                    "id": "sub1-1",
+                    "name": "Ingredient Preparation",
+                    "description": "Preparing and measuring raw materials for formulation.",
+                    "status": "Pending",
+                    "lastUpdatedBy": "System",
+                    "lastUpdatedAt": "2025-11-01T10:05:00Z",
+                    "tasks": [
+                        {
+                            "id": "task1-1-1",
+                            "name": "Weigh Active Ingredients",
+                            "description": "Accurately weigh the API using calibrated scales.",
+                            "status": "Approved",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-01T10:10:00Z"
+                        },
+                        {
+                            "id": "task1-1-2",
+                            "name": "Measure Excipients",
+                            "description": "Measure binders, fillers, and other excipients.",
+                            "status": "Pending",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-01T10:15:00Z"
+                        },
+                        {
+                            "id": "task1-1-3",
+                            "name": "Verify Purity",
+                            "description": "Test ingredients for purity and contaminants.",
+                            "status": "Needs Fix",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-01T10:20:00Z"
+                        },
+                        {
+                            "id": "task1-1-4",
+                            "name": "Label Containers",
+                            "description": "Label all prepared ingredients with batch info.",
+                            "status": "Approved",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-01T10:25:00Z"
+                        }
+                    ]
+                },
+                {
+                    "id": "sub1-2",
+                    "name": "Mixing and Blending",
+                    "description": "Homogeneously mixing ingredients to form the drug mixture.",
+                    "status": "Approved",
+                    "lastUpdatedBy": "System",
+                    "lastUpdatedAt": "2025-11-01T10:30:00Z",
+                    "tasks": [
+                        {
+                            "id": "task1-2-1",
+                            "name": "Load Mixer",
+                            "description": "Load ingredients into the blending equipment.",
+                            "status": "Pending",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-01T10:35:00Z"
+                        },
+                        {
+                            "id": "task1-2-2",
+                            "name": "Set Mixing Parameters",
+                            "description": "Configure speed, time, and temperature for blending.",
+                            "status": "Approved",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-01T10:40:00Z"
+                        },
+                        {
+                            "id": "task1-2-3",
+                            "name": "Perform Blending",
+                            "description": "Run the mixer to achieve uniform blend.",
+                            "status": "Needs Fix",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-01T10:45:00Z"
+                        },
+                        {
+                            "id": "task1-2-4",
+                            "name": "Sample and Test Blend",
+                            "description": "Take samples and test for homogeneity.",
+                            "status": "Pending",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-01T10:50:00Z"
+                        },
+                        {
+                            "id": "task1-2-5",
+                            "name": "Unload Mixture",
+                            "description": "Transfer blended mixture to next stage container.",
+                            "status": "Approved",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-01T10:55:00Z"
+                        }
+                    ]
+                },
+                {
+                    "id": "sub1-3",
+                    "name": "Granulation",
+                    "description": "Converting the blend into granules for better flow properties.",
+                    "status": "Needs Fix",
+                    "lastUpdatedBy": "System",
+                    "lastUpdatedAt": "2025-11-01T11:00:00Z",
+                    "tasks": [
+                        {
+                            "id": "task1-3-1",
+                            "name": "Add Granulating Agent",
+                            "description": "Introduce binder solution to the blend.",
+                            "status": "Pending",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-01T11:05:00Z"
+                        },
+                        {
+                            "id": "task1-3-2",
+                            "name": "Wet Massing",
+                            "description": "Mix to form wet granules.",
+                            "status": "Approved",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-01T11:10:00Z"
+                        },
+                        {
+                            "id": "task1-3-3",
+                            "name": "Dry Granules",
+                            "description": "Dry the wet mass in a fluid bed dryer.",
+                            "status": "Needs Fix",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-01T11:15:00Z"
+                        },
+                        {
+                            "id": "task1-3-4",
+                            "name": "Mill Granules",
+                            "description": "Size the dried granules using a mill.",
+                            "status": "Pending",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-01T11:20:00Z"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "proc2",
+            "name": "Tablet Compression",
+            "description": "Compressing granules into tablets using a tablet press.",
+            "status": "Approved",
+            "lastUpdatedBy": "System",
+            "lastUpdatedAt": "2025-11-02T09:00:00Z",
+            "subprocesses": [
+                {
+                    "id": "sub2-1",
+                    "name": "Tooling Setup",
+                    "description": "Setting up punches and dies in the tablet press.",
+                    "status": "Pending",
+                    "lastUpdatedBy": "System",
+                    "lastUpdatedAt": "2025-11-02T09:05:00Z",
+                    "tasks": [
+                        {
+                            "id": "task2-1-1",
+                            "name": "Inspect Tooling",
+                            "description": "Check punches and dies for damage.",
+                            "status": "Approved",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-02T09:10:00Z"
+                        },
+                        {
+                            "id": "task2-1-2",
+                            "name": "Install Punches",
+                            "description": "Install upper and lower punches.",
+                            "status": "Needs Fix",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-02T09:15:00Z"
+                        },
+                        {
+                            "id": "task2-1-3",
+                            "name": "Align Dies",
+                            "description": "Ensure dies are properly aligned.",
+                            "status": "Pending",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-02T09:20:00Z"
+                        },
+                        {
+                            "id": "task2-1-4",
+                            "name": "Calibrate Press",
+                            "description": "Calibrate compression force and speed.",
+                            "status": "Approved",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-02T09:25:00Z"
+                        },
+                        {
+                            "id": "task2-1-5",
+                            "name": "Test Run",
+                            "description": "Perform a test compression run.",
+                            "status": "Needs Fix",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-02T09:30:00Z"
+                        }
+                    ]
+                },
+                {
+                    "id": "sub2-2",
+                    "name": "Compression Operation",
+                    "description": "Running the tablet press to produce tablets.",
+                    "status": "Needs Fix",
+                    "lastUpdatedBy": "System",
+                    "lastUpdatedAt": "2025-11-02T09:35:00Z",
+                    "tasks": [
+                        {
+                            "id": "task2-2-1",
+                            "name": "Load Hopper",
+                            "description": "Fill granule hopper.",
+                            "status": "Pending",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-02T09:40:00Z"
+                        },
+                        {
+                            "id": "task2-2-2",
+                            "name": "Start Press",
+                            "description": "Initiate compression cycle.",
+                            "status": "Approved",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-02T09:45:00Z"
+                        },
+                        {
+                            "id": "task2-2-3",
+                            "name": "Monitor Parameters",
+                            "description": "Monitor weight, hardness, and thickness.",
+                            "status": "Needs Fix",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-02T09:50:00Z"
+                        },
+                        {
+                            "id": "task2-2-4",
+                            "name": "Adjust as Needed",
+                            "description": "Make adjustments to maintain specs.",
+                            "status": "Pending",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-02T09:55:00Z"
+                        }
+                    ]
+                },
+                {
+                    "id": "sub2-3",
+                    "name": "Tablet Inspection",
+                    "description": "Inspecting compressed tablets for quality.",
+                    "status": "Approved",
+                    "lastUpdatedBy": "System",
+                    "lastUpdatedAt": "2025-11-02T10:00:00Z",
+                    "tasks": [
+                        {
+                            "id": "task2-3-1",
+                            "name": "Visual Inspection",
+                            "description": "Check for defects like chipping.",
+                            "status": "Approved",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-02T10:05:00Z"
+                        },
+                        {
+                            "id": "task2-3-2",
+                            "name": "Weight Check",
+                            "description": "Verify average tablet weight.",
+                            "status": "Pending",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-02T10:10:00Z"
+                        },
+                        {
+                            "id": "task2-3-3",
+                            "name": "Hardness Test",
+                            "description": "Test tablet hardness.",
+                            "status": "Needs Fix",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-02T10:15:00Z"
+                        },
+                        {
+                            "id": "task2-3-4",
+                            "name": "Thickness Measurement",
+                            "description": "Measure tablet thickness.",
+                            "status": "Approved",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-02T10:20:00Z"
+                        },
+                        {
+                            "id": "task2-3-5",
+                            "name": "Friability Test",
+                            "description": "Perform friability testing.",
+                            "status": "Pending",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-02T10:25:00Z"
+                        }
+                    ]
+                },
+                {
+                    "id": "sub2-4",
+                    "name": "Cleaning and Shutdown",
+                    "description": "Cleaning equipment after compression.",
+                    "status": "Pending",
+                    "lastUpdatedBy": "System",
+                    "lastUpdatedAt": "2025-11-02T10:30:00Z",
+                    "tasks": [
+                        {
+                            "id": "task2-4-1",
+                            "name": "Stop Press",
+                            "description": "Halt the tablet press.",
+                            "status": "Approved",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-02T10:35:00Z"
+                        },
+                        {
+                            "id": "task2-4-2",
+                            "name": "Remove Tooling",
+                            "description": "Disassemble punches and dies.",
+                            "status": "Needs Fix",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-02T10:40:00Z"
+                        },
+                        {
+                            "id": "task2-4-3",
+                            "name": "Clean Equipment",
+                            "description": "Clean all parts with approved agents.",
+                            "status": "Pending",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-02T10:45:00Z"
+                        },
+                        {
+                            "id": "task2-4-4",
+                            "name": "Document Cleaning",
+                            "description": "Record cleaning procedure.",
+                            "status": "Approved",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-02T10:50:00Z"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "proc3",
+            "name": "Packaging and Labeling",
+            "description": "Packaging tablets into final containers and labeling them.",
+            "status": "Needs Fix",
+            "lastUpdatedBy": "System",
+            "lastUpdatedAt": "2025-11-03T08:00:00Z",
+            "subprocesses": [
+                {
+                    "id": "sub3-1",
+                    "name": "Blister Packaging",
+                    "description": "Packaging tablets into blister packs.",
+                    "status": "Approved",
+                    "lastUpdatedBy": "System",
+                    "lastUpdatedAt": "2025-11-03T08:05:00Z",
+                    "tasks": [
+                        {
+                            "id": "task3-1-1",
+                            "name": "Load Blister Machine",
+                            "description": "Load tablets and packaging materials.",
+                            "status": "Pending",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-03T08:10:00Z"
+                        },
+                        {
+                            "id": "task3-1-2",
+                            "name": "Form Blisters",
+                            "description": "Form cavities in the blister film.",
+                            "status": "Approved",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-03T08:15:00Z"
+                        },
+                        {
+                            "id": "task3-1-3",
+                            "name": "Fill Tablets",
+                            "description": "Place tablets into blisters.",
+                            "status": "Needs Fix",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-03T08:20:00Z"
+                        },
+                        {
+                            "id": "task3-1-4",
+                            "name": "Seal Blisters",
+                            "description": "Seal with lidding material.",
+                            "status": "Pending",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-03T08:25:00Z"
+                        },
+                        {
+                            "id": "task3-1-5",
+                            "name": "Cut Blister Strips",
+                            "description": "Cut into individual strips.",
+                            "status": "Approved",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-03T08:30:00Z"
+                        }
+                    ]
+                },
+                {
+                    "id": "sub3-2",
+                    "name": "Labeling",
+                    "description": "Applying labels to packages.",
+                    "status": "Pending",
+                    "lastUpdatedBy": "System",
+                    "lastUpdatedAt": "2025-11-03T08:35:00Z",
+                    "tasks": [
+                        {
+                            "id": "task3-2-1",
+                            "name": "Print Labels",
+                            "description": "Print batch-specific labels.",
+                            "status": "Needs Fix",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-03T08:40:00Z"
+                        },
+                        {
+                            "id": "task3-2-2",
+                            "name": "Apply Labels",
+                            "description": "Affix labels to blister packs.",
+                            "status": "Approved",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-03T08:45:00Z"
+                        },
+                        {
+                            "id": "task3-2-3",
+                            "name": "Verify Labels",
+                            "description": "Check for correct information and adhesion.",
+                            "status": "Pending",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-03T08:50:00Z"
+                        },
+                        {
+                            "id": "task3-2-4",
+                            "name": "Serialize Packages",
+                            "description": "Add unique serial numbers.",
+                            "status": "Approved",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-03T08:55:00Z"
+                        }
+                    ]
+                },
+                {
+                    "id": "sub3-3",
+                    "name": "Final Inspection and Packing",
+                    "description": "Inspecting and packing into cartons.",
+                    "status": "Needs Fix",
+                    "lastUpdatedBy": "System",
+                    "lastUpdatedAt": "2025-11-03T09:00:00Z",
+                    "tasks": [
+                        {
+                            "id": "task3-3-1",
+                            "name": "Inspect Packages",
+                            "description": "Final visual and quality check.",
+                            "status": "Pending",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-03T09:05:00Z"
+                        },
+                        {
+                            "id": "task3-3-2",
+                            "name": "Pack into Cartons",
+                            "description": "Place blister packs into shipping cartons.",
+                            "status": "Approved",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-03T09:10:00Z"
+                        },
+                        {
+                            "id": "task3-3-3",
+                            "name": "Seal Cartons",
+                            "description": "Seal and label cartons.",
+                            "status": "Needs Fix",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-03T09:15:00Z"
+                        },
+                        {
+                            "id": "task3-3-4",
+                            "name": "Document Batch",
+                            "description": "Record all packaging details.",
+                            "status": "Pending",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-03T09:20:00Z"
+                        },
+                        {
+                            "id": "task3-3-5",
+                            "name": "Store for Release",
+                            "description": "Move to quarantine area awaiting release.",
+                            "status": "Approved",
+                            "lastUpdatedBy": "System",
+                            "lastUpdatedAt": "2025-11-03T09:25:00Z"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

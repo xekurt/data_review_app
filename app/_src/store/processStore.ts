@@ -72,14 +72,14 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
   _subprocessesCache: null,
   _tasksCache: null,
   setProcesses: (processes) => {
-    set((state) => {
-      const subprocessesCache = state.processes.flatMap((p) =>
+    set(() => {
+      const subprocessesCache = processes.flatMap((p) =>
         p.subprocesses.map((sp) => ({
           ...sp,
           processId: p.id,
         }))
       );
-      const tasksCache = state.processes.flatMap((p) =>
+      const tasksCache = processes.flatMap((p) =>
         p.subprocesses.flatMap((sp) =>
           sp.tasks.map((t) => ({
             ...t,
@@ -185,21 +185,35 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
     return state._tasksCache || [];
   },
   updateProcess: (processId, updates) =>
-    set((state) => ({
-      processes: state.processes.map((p) =>
+    set((state) => {
+      const updatedProcesses = state.processes.map((p) =>
         p.id === processId
           ? { ...p, ...updates, lastUpdatedAt: new Date().toISOString() }
           : p
-      ),
-    })),
+      );
+      if (typeof window !== "undefined") {
+        localStorage.setItem(
+          STORAGE_KEYS.PROCESSES,
+          JSON.stringify(updatedProcesses)
+        );
+      }
+      return { processes: updatedProcesses };
+    }),
   updateProcessStatus: (processId, status) =>
-    set((state) => ({
-      processes: state.processes.map((p) =>
+    set((state) => {
+      const updatedProcesses = state.processes.map((p) =>
         p.id === processId
           ? { ...p, status, lastUpdatedAt: new Date().toISOString() }
           : p
-      ),
-    })),
+      );
+      if (typeof window !== "undefined") {
+        localStorage.setItem(
+          STORAGE_KEYS.PROCESSES,
+          JSON.stringify(updatedProcesses)
+        );
+      }
+      return { processes: updatedProcesses };
+    }),
   updateSubprocess: (processId, subprocessId, updates) =>
     set((state) => {
       const updatedProcesses = state.processes.map((p) =>
@@ -233,6 +247,12 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
           }))
         )
       );
+      if (typeof window !== "undefined") {
+        localStorage.setItem(
+          STORAGE_KEYS.PROCESSES,
+          JSON.stringify(updatedProcesses)
+        );
+      }
       return {
         processes: updatedProcesses,
         _subprocessesCache: subprocessesCache,
@@ -268,6 +288,12 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
           }))
         )
       );
+      if (typeof window !== "undefined") {
+        localStorage.setItem(
+          STORAGE_KEYS.PROCESSES,
+          JSON.stringify(updatedProcesses)
+        );
+      }
       return {
         processes: updatedProcesses,
         _subprocessesCache: subprocessesCache,
@@ -314,6 +340,12 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
           }))
         )
       );
+      if (typeof window !== "undefined") {
+        localStorage.setItem(
+          STORAGE_KEYS.PROCESSES,
+          JSON.stringify(updatedProcesses)
+        );
+      }
       return {
         processes: updatedProcesses,
         _subprocessesCache: subprocessesCache,
@@ -396,6 +428,12 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
           }))
         )
       );
+      if (typeof window !== "undefined") {
+        localStorage.setItem(
+          STORAGE_KEYS.PROCESSES,
+          JSON.stringify(finalProcesses)
+        );
+      }
       return {
         processes: finalProcesses,
         _subprocessesCache: subprocessesCache,

@@ -4,12 +4,17 @@ import { useProcessData } from "../../hooks/useProcessData";
 import { useSubprocessData } from "../../hooks/useProcessData";
 import ListItem from "../ListItem";
 import ProgressHint from "../ProgressHint";
+import Comments from "../Comments";
 import { getSubprocessTaskProgress } from "../../utils/progress";
 
 export default function Subprocesses() {
   const { selectedProcess } = useProcessData();
-  const { subprocesses, selectedSubprocess, setSelectedSubprocess } =
-    useSubprocessData();
+  const {
+    subprocesses,
+    selectedSubprocess,
+    setSelectedSubprocess,
+    addSubprocessComment,
+  } = useSubprocessData();
 
   if (!selectedProcess) {
     return (
@@ -51,6 +56,19 @@ export default function Subprocesses() {
                   total={taskProgress.total}
                   completed={taskProgress.approved}
                 />
+                {selectedSubprocess?.id === subprocess.id && (
+                  <Comments
+                    comments={subprocess.comments}
+                    onAddComment={(text, author) =>
+                      addSubprocessComment(
+                        subprocess.processId,
+                        subprocess.id,
+                        text,
+                        author
+                      )
+                    }
+                  />
+                )}
               </ListItem>
             );
           })

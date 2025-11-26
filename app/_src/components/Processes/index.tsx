@@ -3,15 +3,22 @@
 import { useProcessData } from "../../hooks/useProcessData";
 import ListItem from "../ListItem";
 import ProgressHint from "../ProgressHint";
+import Comments from "../Comments";
 import {
   getProcessTaskProgress,
   getProcessSubprocessProgress,
 } from "../../utils/progress";
 
 export default function Processes() {
-  const { processes, isLoading, error, selectedProcess, setSelectedProcess } =
-    useProcessData();
-
+  const {
+    processes,
+    isLoading,
+    error,
+    selectedProcess,
+    setSelectedProcess,
+    addProcessComment,
+  } = useProcessData();
+  console.info(processes);
   if (isLoading) return <div className="p-6">Loading processes...</div>;
   if (error) return <div className="p-6 text-error">{error}</div>;
 
@@ -46,6 +53,14 @@ export default function Processes() {
                   completed={subprocessProgress.approved}
                 />
               </div>
+              {selectedProcess?.id === process.id && (
+                <Comments
+                  comments={process.comments}
+                  onAddComment={(text, author) =>
+                    addProcessComment(process.id, text, author)
+                  }
+                />
+              )}
             </ListItem>
           );
         })}

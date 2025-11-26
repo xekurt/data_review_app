@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { Process, Subprocess, Task } from "../types/process";
+import type { Process, Subprocess, Task, Comment } from "../types/process";
 import { STORAGE_KEYS } from "./constants";
 
 interface ProcessStore {
@@ -45,6 +45,20 @@ interface ProcessStore {
     subprocessId: string,
     taskId: string,
     status: Task["status"]
+  ) => void;
+  addProcessComment: (processId: string, text: string, author: string) => void;
+  addSubprocessComment: (
+    processId: string,
+    subprocessId: string,
+    text: string,
+    author: string
+  ) => void;
+  addTaskComment: (
+    processId: string,
+    subprocessId: string,
+    taskId: string,
+    text: string,
+    author: string
   ) => void;
 }
 
@@ -387,5 +401,119 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
         _subprocessesCache: subprocessesCache,
         _tasksCache: tasksCache,
       };
+    }),
+  addProcessComment: (processId, text, author) =>
+    set((state) => {
+      const newComment: Comment = {
+        id: `comment-${Date.now()}-${Math.random()}`,
+        text,
+        author,
+        createdAt: new Date().toISOString(),
+      };
+      const updatedProcesses = state.processes.map((p) =>
+        p.id === processId
+          ? {
+              ...p,
+              comments: [...p.comments, newComment],
+              lastUpdatedAt: new Date().toISOString(),
+            }
+          : p
+      );
+      if (typeof window !== "undefined") {
+        localStorage.setItem(
+          STORAGE_KEYS.PROCESSES,
+          JSON.stringify(updatedProcesses)
+        );
+      }
+      return { processes: updatedProcesses };
+    }),
+  addSubprocessComment: (processId, subprocessId, text, author) =>
+    set((state) => {
+      const newComment: Comment = {
+        id: `comment-${Date.now()}-${Math.random()}`,
+        text,
+        author,
+        createdAt: new Date().toISOString(),
+      };
+      const updatedProcesses = state.processes.map((p) =>
+        p.id === processId
+          ? {
+              ...p,
+              subprocesses: p.subprocesses.map((sp) =>
+                sp.id === subprocessId
+                  ? {
+                      ...sp,
+                      comments: [...sp.comments, newComment],
+                      lastUpdatedAt: new Date().toISOString(),
+                    }
+                  : sp
+              ),
+            }
+          : p
+      );
+      const subprocessesCache = updatedProcesses.flatMap((p) =>
+        p.subprocesses.map((sp) => ({
+          ...sp,
+          processId: p.id,
+        }))
+      );
+      if (typeof window !== "undefined") {
+        localStorage.setItem(
+          STORAGE_KEYS.PROCESSES,
+          JSON.stringify(updatedProcesses)
+        );
+      }
+      return {
+        processes: updatedProcesses,
+        _subprocessesCache: subprocessesCache,
+      };
+    }),
+  addTaskComment: (processId, subprocessId, taskId, text, author) =>
+    set((state) => {
+      const newComment: Comment = {
+        id: `comment-${Date.now()}-${Math.random()}`,
+        text,
+        author,
+        createdAt: new Date().toISOString(),
+      };
+      const updatedProcesses = state.processes.map((p) =>
+        p.id === processId
+          ? {
+              ...p,
+              subprocesses: p.subprocesses.map((sp) =>
+                sp.id === subprocessId
+                  ? {
+                      ...sp,
+                      tasks: sp.tasks.map((t) =>
+                        t.id === taskId
+                          ? {
+                              ...t,
+                              comments: [...t.comments, newComment],
+                              lastUpdatedAt: new Date().toISOString(),
+                            }
+                          : t
+                      ),
+                    }
+                  : sp
+              ),
+            }
+          : p
+      );
+      const tasksCache = updatedProcesses.flatMap((p) =>
+        p.subprocesses.flatMap((sp) =>
+          sp.tasks.map((t) => ({
+            ...t,
+            processId: p.id,
+            subprocessId: sp.id,
+          }))
+        )
+      );
+      if (typeof window !== "undefined") {
+        localStorage.setItem(
+          STORAGE_KEYS.PROCESSES,
+          JSON.stringify(updatedProcesses)
+        );
+      }
+      return { processes: updatedProcesses, _tasksCache: tasksCache };
     }),
 }));

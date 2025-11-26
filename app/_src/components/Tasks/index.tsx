@@ -4,12 +4,18 @@ import { useProcessData } from "../../hooks/useProcessData";
 import { useSubprocessData } from "../../hooks/useProcessData";
 import { useTaskData } from "../../hooks/useProcessData";
 import ListItem from "../ListItem";
+import Comments from "../Comments";
 
 export default function Tasks() {
   const { selectedProcess } = useProcessData();
   const { selectedSubprocess } = useSubprocessData();
-  const { tasks, selectedTask, setSelectedTask, updateTaskStatus } =
-    useTaskData();
+  const {
+    tasks,
+    selectedTask,
+    setSelectedTask,
+    updateTaskStatus,
+    addTaskComment,
+  } = useTaskData();
 
   if (!selectedProcess || !selectedSubprocess) {
     return (
@@ -56,7 +62,22 @@ export default function Tasks() {
                   status
                 )
               }
-            />
+            >
+              {selectedTask?.id === task.id && (
+                <Comments
+                  comments={task.comments}
+                  onAddComment={(text, author) =>
+                    addTaskComment(
+                      task.processId,
+                      task.subprocessId,
+                      task.id,
+                      text,
+                      author
+                    )
+                  }
+                />
+              )}
+            </ListItem>
           ))
         )}
       </div>

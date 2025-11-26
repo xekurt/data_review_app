@@ -18,6 +18,7 @@ export const useProcessData = () => {
   const updateProcessStatus = useProcessStore(
     (state) => state.updateProcessStatus
   );
+  const addProcessComment = useProcessStore((state) => state.addProcessComment);
 
   return {
     processes,
@@ -28,6 +29,7 @@ export const useProcessData = () => {
     setSelectedProcess,
     updateProcess,
     updateProcessStatus,
+    addProcessComment,
   };
 };
 
@@ -45,6 +47,9 @@ export const useSubprocessData = () => {
   const updateSubprocessStatus = useProcessStore(
     (state) => state.updateSubprocessStatus
   );
+  const addSubprocessComment = useProcessStore(
+    (state) => state.addSubprocessComment
+  );
 
   return {
     subprocesses,
@@ -52,6 +57,7 @@ export const useSubprocessData = () => {
     setSelectedSubprocess,
     updateSubprocess,
     updateSubprocessStatus,
+    addSubprocessComment,
   };
 };
 
@@ -63,6 +69,7 @@ export const useTaskData = () => {
   const setSelectedTask = useProcessStore((state) => state.setSelectedTask);
   const updateTask = useProcessStore((state) => state.updateTask);
   const updateTaskStatus = useProcessStore((state) => state.updateTaskStatus);
+  const addTaskComment = useProcessStore((state) => state.addTaskComment);
 
   return {
     tasks,
@@ -70,6 +77,7 @@ export const useTaskData = () => {
     setSelectedTask,
     updateTask,
     updateTaskStatus,
+    addTaskComment,
   };
 };
 

@@ -1,3 +1,10 @@
+export interface Comment {
+  id: string;
+  text: string;
+  author: string;
+  createdAt: string;
+}
+
 export interface Task {
   id: string;
   name: string;
@@ -5,6 +12,7 @@ export interface Task {
   status: "Pending" | "Approved" | "Needs Fix";
   lastUpdatedBy: string;
   lastUpdatedAt: string;
+  comments: Comment[];
 }
 
 export interface Subprocess {
@@ -15,6 +23,7 @@ export interface Subprocess {
   lastUpdatedBy: string;
   lastUpdatedAt: string;
   tasks: Task[];
+  comments: Comment[];
 }
 
 export interface Process {
@@ -25,4 +34,5 @@ export interface Process {
   lastUpdatedBy: string;
   lastUpdatedAt: string;
   subprocesses: Subprocess[];
+  comments: Comment[];
 }

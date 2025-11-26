@@ -21,7 +21,8 @@
             "description": "Authenticate and connect to the external API.",
             "status": "Approved",
             "lastUpdatedBy": "alice",
-            "lastUpdatedAt": "2025-11-21T09:10:00Z"
+            "lastUpdatedAt": "2025-11-21T09:10:00Z",
+            "comments": []
           },
           {
             "id": "task-1-1-2",
@@ -29,7 +30,8 @@
             "description": "Set up database credentials and test connection.",
             "status": "Approved",
             "lastUpdatedBy": "bob",
-            "lastUpdatedAt": "2025-11-21T09:15:00Z"
+            "lastUpdatedAt": "2025-11-21T09:15:00Z",
+            "comments": []
           },
           {
             "id": "task-1-1-3",
@@ -37,9 +39,11 @@
             "description": "Ensure all sources are reachable and responsive.",
             "status": "Approved",
             "lastUpdatedBy": "alice",
-            "lastUpdatedAt": "2025-11-21T09:20:00Z"
+            "lastUpdatedAt": "2025-11-21T09:20:00Z",
+            "comments": []
           }
-        ]
+        ],
+        "comments": []
       },
       {
         "id": "subprocess-1-2",
@@ -55,7 +59,8 @@
             "description": "Verify data matches expected schema.",
             "status": "Needs Fix",
             "lastUpdatedBy": "carol",
-            "lastUpdatedAt": "2025-11-22T11:30:00Z"
+            "lastUpdatedAt": "2025-11-22T11:30:00Z",
+            "comments": []
           },
           {
             "id": "task-1-2-2",
@@ -63,7 +68,8 @@
             "description": "Identify missing or null values in critical fields.",
             "status": "Pending",
             "lastUpdatedBy": "bob",
-            "lastUpdatedAt": "2025-11-22T11:35:00Z"
+            "lastUpdatedAt": "2025-11-22T11:35:00Z",
+            "comments": []
           },
           {
             "id": "task-1-2-3",
@@ -71,7 +77,8 @@
             "description": "Detect and flag duplicate records.",
             "status": "Approved",
             "lastUpdatedBy": "alice",
-            "lastUpdatedAt": "2025-11-22T11:40:00Z"
+            "lastUpdatedAt": "2025-11-22T11:40:00Z",
+            "comments": []
           },
           {
             "id": "task-1-2-4",
@@ -79,11 +86,14 @@
             "description": "Ensure data consistency across sources.",
             "status": "Pending",
             "lastUpdatedBy": "carol",
-            "lastUpdatedAt": "2025-11-22T11:45:00Z"
+            "lastUpdatedAt": "2025-11-22T11:45:00Z",
+            "comments": []
           }
-        ]
+        ],
+        "comments": []
       }
-    ]
+    ],
+    "comments": []
   },
   {
     "id": "process-2",
@@ -107,7 +117,8 @@
             "description": "Identify and remove outlier values.",
             "status": "Pending",
             "lastUpdatedBy": "dave",
-            "lastUpdatedAt": "2025-11-23T14:10:00Z"
+            "lastUpdatedAt": "2025-11-23T14:10:00Z",
+            "comments": []
           },
           {
             "id": "task-2-1-2",
@@ -115,7 +126,8 @@
             "description": "Convert dates and numbers to standard formats.",
             "status": "Pending",
             "lastUpdatedBy": "dave",
-            "lastUpdatedAt": "2025-11-23T14:15:00Z"
+            "lastUpdatedAt": "2025-11-23T14:15:00Z",
+            "comments": []
           },
           {
             "id": "task-2-1-3",
@@ -123,9 +135,11 @@
             "description": "Fill in missing values using appropriate methods.",
             "status": "Pending",
             "lastUpdatedBy": "dave",
-            "lastUpdatedAt": "2025-11-23T14:20:00Z"
+            "lastUpdatedAt": "2025-11-23T14:20:00Z",
+            "comments": []
           }
-        ]
+        ],
+        "comments": []
       },
       {
         "id": "subprocess-2-2",
@@ -141,7 +155,8 @@
             "description": "Map addresses to geographic coordinates.",
             "status": "Pending",
             "lastUpdatedBy": "carol",
-            "lastUpdatedAt": "2025-11-23T15:05:00Z"
+            "lastUpdatedAt": "2025-11-23T15:05:00Z",
+            "comments": []
           },
           {
             "id": "task-2-2-2",
@@ -149,7 +164,8 @@
             "description": "Join with third-party datasets for enrichment.",
             "status": "Pending",
             "lastUpdatedBy": "carol",
-            "lastUpdatedAt": "2025-11-23T15:10:00Z"
+            "lastUpdatedAt": "2025-11-23T15:10:00Z",
+            "comments": []
           },
           {
             "id": "task-2-2-3",
@@ -157,7 +173,8 @@
             "description": "Calculate new metrics from existing data.",
             "status": "Pending",
             "lastUpdatedBy": "dave",
-            "lastUpdatedAt": "2025-11-23T15:15:00Z"
+            "lastUpdatedAt": "2025-11-23T15:15:00Z",
+            "comments": []
           },
           {
             "id": "task-2-2-4",
@@ -165,11 +182,14 @@
             "description": "Tag records based on business rules.",
             "status": "Pending",
             "lastUpdatedBy": "carol",
-            "lastUpdatedAt": "2025-11-23T15:20:00Z"
+            "lastUpdatedAt": "2025-11-23T15:20:00Z",
+            "comments": []
           }
-        ]
+        ],
+        "comments": []
       }
-    ]
+    ],
+    "comments": []
   },
   {
     "id": "process-3",
@@ -193,7 +213,8 @@
             "description": "Generate high-level summary report.",
             "status": "Needs Fix",
             "lastUpdatedBy": "bob",
-            "lastUpdatedAt": "2025-11-24T08:15:00Z"
+            "lastUpdatedAt": "2025-11-24T08:15:00Z",
+            "comments": []
           },
           {
             "id": "task-3-1-2",
@@ -201,7 +222,8 @@
             "description": "Generate detailed report with all records.",
             "status": "Needs Fix",
             "lastUpdatedBy": "alice",
-            "lastUpdatedAt": "2025-11-24T08:20:00Z"
+            "lastUpdatedAt": "2025-11-24T08:20:00Z",
+            "comments": []
           },
           {
             "id": "task-3-1-3",
@@ -209,9 +231,11 @@
             "description": "Export report data to CSV format.",
             "status": "Pending",
             "lastUpdatedBy": "bob",
-            "lastUpdatedAt": "2025-11-24T08:25:00Z"
+            "lastUpdatedAt": "2025-11-24T08:25:00Z",
+            "comments": []
           }
-        ]
+        ],
+        "comments": []
       },
       {
         "id": "subprocess-3-2",
@@ -227,7 +251,8 @@
             "description": "Set up meeting with stakeholders.",
             "status": "Pending",
             "lastUpdatedBy": "carol",
-            "lastUpdatedAt": "2025-11-24T09:05:00Z"
+            "lastUpdatedAt": "2025-11-24T09:05:00Z",
+            "comments": []
           },
           {
             "id": "task-3-2-2",
@@ -235,7 +260,8 @@
             "description": "Present report findings to the team.",
             "status": "Pending",
             "lastUpdatedBy": "alice",
-            "lastUpdatedAt": "2025-11-24T09:10:00Z"
+            "lastUpdatedAt": "2025-11-24T09:10:00Z",
+            "comments": []
           },
           {
             "id": "task-3-2-3",
@@ -243,7 +269,8 @@
             "description": "Approve or request changes to reports.",
             "status": "Pending",
             "lastUpdatedBy": "bob",
-            "lastUpdatedAt": "2025-11-24T09:15:00Z"
+            "lastUpdatedAt": "2025-11-24T09:15:00Z",
+            "comments": []
           },
           {
             "id": "task-3-2-4",
@@ -251,7 +278,8 @@
             "description": "Record follow-up actions from review.",
             "status": "Pending",
             "lastUpdatedBy": "carol",
-            "lastUpdatedAt": "2025-11-24T09:20:00Z"
+            "lastUpdatedAt": "2025-11-24T09:20:00Z",
+            "comments": []
           },
           {
             "id": "task-3-2-5",
@@ -259,10 +287,13 @@
             "description": "Send meeting minutes to all participants.",
             "status": "Pending",
             "lastUpdatedBy": "alice",
-            "lastUpdatedAt": "2025-11-24T09:25:00Z"
+            "lastUpdatedAt": "2025-11-24T09:25:00Z",
+            "comments": []
           }
-        ]
+        ],
+        "comments": []
       }
-    ]
+    ],
+    "comments": []
   }
 ]

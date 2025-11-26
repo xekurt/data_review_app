@@ -2,6 +2,8 @@
 
 import { ReactNode } from "react";
 import { formatDate } from "../../utils/formatters";
+import StatusSelect from "../StatusSelect";
+import { Task } from "../../types/process";
 
 interface ListItemProps {
   title: string;
@@ -12,6 +14,11 @@ interface ListItemProps {
   lastUpdatedBy?: string;
   lastUpdatedAt?: string;
   children?: ReactNode;
+  isTask?: boolean;
+  taskId?: string;
+  processId?: string;
+  subprocessId?: string;
+  onStatusChange?: (status: Task["status"]) => void;
 }
 
 const statusColors = {
@@ -31,6 +38,8 @@ export default function ListItem({
   lastUpdatedBy,
   lastUpdatedAt,
   children,
+  isTask = false,
+  onStatusChange,
 }: ListItemProps) {
   return (
     <div
@@ -53,11 +62,17 @@ export default function ListItem({
           </p>
         </div>
         {status && (
-          <span
-            className={`text-xs font-medium px-2.5 py-1 rounded whitespace-nowrap ${statusColors[status]}`}
-          >
-            {status}
-          </span>
+          <>
+            {isTask && onStatusChange ? (
+              <StatusSelect status={status} onStatusChange={onStatusChange} />
+            ) : (
+              <span
+                className={`text-xs font-medium px-2.5 py-1 rounded whitespace-nowrap ${statusColors[status]}`}
+              >
+                {status}
+              </span>
+            )}
+          </>
         )}
       </div>
       {(lastUpdatedBy || lastUpdatedAt) && (

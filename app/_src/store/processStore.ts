@@ -331,13 +331,49 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
             }
           : p
       );
-      const subprocessesCache = updatedProcesses.flatMap((p) =>
+
+      // Calculate subprocess status based on tasks
+      const finalProcesses = updatedProcesses.map((p) =>
+        p.id === processId
+          ? {
+              ...p,
+              subprocesses: p.subprocesses.map((sp) => {
+                if (sp.id === subprocessId) {
+                  const allApproved = sp.tasks.every(
+                    (t) => t.status === "Approved"
+                  );
+                  const anyNeedsFix = sp.tasks.some(
+                    (t) => t.status === "Needs Fix"
+                  );
+
+                  let subprocessStatus: Task["status"];
+                  if (allApproved) {
+                    subprocessStatus = "Approved";
+                  } else if (anyNeedsFix) {
+                    subprocessStatus = "Needs Fix";
+                  } else {
+                    subprocessStatus = "Pending";
+                  }
+
+                  return {
+                    ...sp,
+                    status: subprocessStatus,
+                    lastUpdatedAt: new Date().toISOString(),
+                  };
+                }
+                return sp;
+              }),
+            }
+          : p
+      );
+
+      const subprocessesCache = finalProcesses.flatMap((p) =>
         p.subprocesses.map((sp) => ({
           ...sp,
           processId: p.id,
         }))
       );
-      const tasksCache = updatedProcesses.flatMap((p) =>
+      const tasksCache = finalProcesses.flatMap((p) =>
         p.subprocesses.flatMap((sp) =>
           sp.tasks.map((t) => ({
             ...t,
@@ -347,7 +383,7 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
         )
       );
       return {
-        processes: updatedProcesses,
+        processes: finalProcesses,
         _subprocessesCache: subprocessesCache,
         _tasksCache: tasksCache,
       };

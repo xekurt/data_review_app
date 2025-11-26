@@ -8,7 +8,8 @@ import ListItem from "../ListItem";
 export default function Tasks() {
   const { selectedProcess } = useProcessData();
   const { selectedSubprocess } = useSubprocessData();
-  const { tasks, selectedTask, setSelectedTask } = useTaskData();
+  const { tasks, selectedTask, setSelectedTask, updateTaskStatus } =
+    useTaskData();
 
   if (!selectedProcess || !selectedSubprocess) {
     return (
@@ -43,6 +44,18 @@ export default function Tasks() {
               lastUpdatedAt={task.lastUpdatedAt}
               isSelected={selectedTask?.id === task.id}
               onClick={() => setSelectedTask(task)}
+              isTask={true}
+              taskId={task.id}
+              processId={task.processId}
+              subprocessId={task.subprocessId}
+              onStatusChange={(status) =>
+                updateTaskStatus(
+                  task.processId,
+                  task.subprocessId,
+                  task.id,
+                  status
+                )
+              }
             />
           ))
         )}

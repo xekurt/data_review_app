@@ -30,13 +30,14 @@ export default function ProgressHint({
       </div>
       <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 overflow-hidden">
         <div
-          className={`h-full transition-all duration-300 ${
-            percentage >= 80
-              ? "bg-success" // green from theme
-              : percentage >= 50
-              ? "bg-secondary-500" // brand secondary mid
-              : "bg-warning" // orange from theme
-          }`}
+          className={`h-full 
+            transition-all duration-300 ${
+              percentage >= 80
+                ? "bg-green-900" // green from theme
+                : percentage >= 50
+                ? "bg-green-500" // brand secondary mid
+                : "bg-red-600" // orange from theme
+            }`}
           style={{ width: `${percentage}%` }}
         />
       </div>

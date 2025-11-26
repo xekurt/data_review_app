@@ -36,10 +36,12 @@ export default function Processes() {
             >
               <div className="space-y-2">
                 <ProgressHint
+                  label="Tasks"
                   total={taskProgress.total}
                   completed={taskProgress.approved}
                 />
                 <ProgressHint
+                  label="SubProcesses"
                   total={subprocessProgress.total}
                   completed={subprocessProgress.approved}
                 />

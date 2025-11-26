@@ -3,6 +3,8 @@
 import { useProcessData } from "../../hooks/useProcessData";
 import { useSubprocessData } from "../../hooks/useProcessData";
 import ListItem from "../ListItem";
+import ProgressHint from "../ProgressHint";
+import { getSubprocessTaskProgress } from "../../utils/progress";
 
 export default function Subprocesses() {
   const { selectedProcess } = useProcessData();
@@ -30,18 +32,27 @@ export default function Subprocesses() {
             No subprocesses found
           </p>
         ) : (
-          filteredSubprocesses.map((subprocess) => (
-            <ListItem
-              key={subprocess.id}
-              title={subprocess.name}
-              description={subprocess.description}
-              status={subprocess.status}
-              lastUpdatedBy={subprocess.lastUpdatedBy}
-              lastUpdatedAt={subprocess.lastUpdatedAt}
-              isSelected={selectedSubprocess?.id === subprocess.id}
-              onClick={() => setSelectedSubprocess(subprocess)}
-            />
-          ))
+          filteredSubprocesses.map((subprocess) => {
+            const taskProgress = getSubprocessTaskProgress(subprocess);
+
+            return (
+              <ListItem
+                key={subprocess.id}
+                title={subprocess.name}
+                description={subprocess.description}
+                status={subprocess.status}
+                lastUpdatedBy={subprocess.lastUpdatedBy}
+                lastUpdatedAt={subprocess.lastUpdatedAt}
+                isSelected={selectedSubprocess?.id === subprocess.id}
+                onClick={() => setSelectedSubprocess(subprocess)}
+              >
+                <ProgressHint
+                  total={taskProgress.total}
+                  completed={taskProgress.approved}
+                />
+              </ListItem>
+            );
+          })
         )}
       </div>
     </div>

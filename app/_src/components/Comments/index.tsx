@@ -32,7 +32,7 @@ export default function Comments({ comments, onAddComment }: CommentsProps) {
     <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="flex items-center justify-between w-full text-left mb-3"
+        className="flex items-center justify-between w-full text-left mb-3 cursor-pointer"
       >
         <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
           Comments ({comments.length})

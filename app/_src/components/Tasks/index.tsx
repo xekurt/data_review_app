@@ -63,20 +63,18 @@ export default function Tasks() {
                 )
               }
             >
-              {selectedTask?.id === task.id && (
-                <Comments
-                  comments={task.comments}
-                  onAddComment={(text, author) =>
-                    addTaskComment(
-                      task.processId,
-                      task.subprocessId,
-                      task.id,
-                      text,
-                      author
-                    )
-                  }
-                />
-              )}
+              <Comments
+                comments={task.comments}
+                onAddComment={(text, author) =>
+                  addTaskComment(
+                    task.processId,
+                    task.subprocessId,
+                    task.id,
+                    text,
+                    author
+                  )
+                }
+              />
             </ListItem>
           ))
         )}

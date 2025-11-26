@@ -53,14 +53,13 @@ export default function Processes() {
                   completed={subprocessProgress.approved}
                 />
               </div>
-              {selectedProcess?.id === process.id && (
-                <Comments
-                  comments={process.comments}
-                  onAddComment={(text, author) =>
-                    addProcessComment(process.id, text, author)
-                  }
-                />
-              )}
+
+              <Comments
+                comments={process.comments}
+                onAddComment={(text, author) =>
+                  addProcessComment(process.id, text, author)
+                }
+              />
             </ListItem>
           );
         })}

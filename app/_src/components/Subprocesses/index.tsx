@@ -56,19 +56,18 @@ export default function Subprocesses() {
                   total={taskProgress.total}
                   completed={taskProgress.approved}
                 />
-                {selectedSubprocess?.id === subprocess.id && (
-                  <Comments
-                    comments={subprocess.comments}
-                    onAddComment={(text, author) =>
-                      addSubprocessComment(
-                        subprocess.processId,
-                        subprocess.id,
-                        text,
-                        author
-                      )
-                    }
-                  />
-                )}
+
+                <Comments
+                  comments={subprocess.comments}
+                  onAddComment={(text, author) =>
+                    addSubprocessComment(
+                      subprocess.processId,
+                      subprocess.id,
+                      text,
+                      author
+                    )
+                  }
+                />
               </ListItem>
             );
           })

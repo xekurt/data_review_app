@@ -9,6 +9,8 @@ interface ProcessStore {
   selectedTask: (Task & { processId: string; subprocessId: string }) | null;
   isLoading: boolean;
   error: string | null;
+  _subprocessesCache: (Subprocess & { processId: string })[] | null;
+  _tasksCache: (Task & { processId: string; subprocessId: string })[] | null;
   setProcesses: (processes: Process[]) => void;
   setSelectedProcess: (process: Process | null) => void;
   setSelectedSubprocess: (
@@ -53,11 +55,34 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
   selectedTask: null,
   isLoading: false,
   error: null,
+  _subprocessesCache: null,
+  _tasksCache: null,
   setProcesses: (processes) => {
-    set({ processes });
-    if (typeof window !== "undefined") {
-      localStorage.setItem(STORAGE_KEYS.PROCESSES, JSON.stringify(processes));
-    }
+    set((state) => {
+      const subprocessesCache = state.processes.flatMap((p) =>
+        p.subprocesses.map((sp) => ({
+          ...sp,
+          processId: p.id,
+        }))
+      );
+      const tasksCache = state.processes.flatMap((p) =>
+        p.subprocesses.flatMap((sp) =>
+          sp.tasks.map((t) => ({
+            ...t,
+            processId: p.id,
+            subprocessId: sp.id,
+          }))
+        )
+      );
+      if (typeof window !== "undefined") {
+        localStorage.setItem(STORAGE_KEYS.PROCESSES, JSON.stringify(processes));
+      }
+      return {
+        processes,
+        _subprocessesCache: subprocessesCache,
+        _tasksCache: tasksCache,
+      };
+    });
   },
   setSelectedProcess: (process) => set({ selectedProcess: process }),
   setSelectedSubprocess: (subprocess) =>
@@ -70,7 +95,28 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
       if (typeof window !== "undefined") {
         const cached = localStorage.getItem(STORAGE_KEYS.PROCESSES);
         if (cached) {
-          set({ processes: JSON.parse(cached), isLoading: false });
+          const processes = JSON.parse(cached);
+          const subprocessesCache = processes.flatMap((p: Process) =>
+            p.subprocesses.map((sp: Subprocess) => ({
+              ...sp,
+              processId: p.id,
+            }))
+          );
+          const tasksCache = processes.flatMap((p: Process) =>
+            p.subprocesses.flatMap((sp: Subprocess) =>
+              sp.tasks.map((t: Task) => ({
+                ...t,
+                processId: p.id,
+                subprocessId: sp.id,
+              }))
+            )
+          );
+          set({
+            processes,
+            _subprocessesCache: subprocessesCache,
+            _tasksCache: tasksCache,
+            isLoading: false,
+          });
           return;
         }
       }
@@ -83,11 +129,33 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
       if (!response.ok) throw new Error("Failed to fetch processes");
       const processes = await response.json();
 
+      // Calculate caches
+      const subprocessesCache = processes.flatMap((p: Process) =>
+        p.subprocesses.map((sp: Subprocess) => ({
+          ...sp,
+          processId: p.id,
+        }))
+      );
+      const tasksCache = processes.flatMap((p: Process) =>
+        p.subprocesses.flatMap((sp: Subprocess) =>
+          sp.tasks.map((t: Task) => ({
+            ...t,
+            processId: p.id,
+            subprocessId: sp.id,
+          }))
+        )
+      );
+
       // Persist to localStorage
       if (typeof window !== "undefined") {
         localStorage.setItem(STORAGE_KEYS.PROCESSES, JSON.stringify(processes));
       }
-      set({ processes, isLoading: false });
+      set({
+        processes,
+        _subprocessesCache: subprocessesCache,
+        _tasksCache: tasksCache,
+        isLoading: false,
+      });
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error";
@@ -96,24 +164,11 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
   },
   getSubprocesses: () => {
     const state = get();
-    return state.processes.flatMap((p) =>
-      p.subprocesses.map((sp) => ({
-        ...sp,
-        processId: p.id,
-      }))
-    );
+    return state._subprocessesCache || [];
   },
   getTasks: () => {
     const state = get();
-    return state.processes.flatMap((p) =>
-      p.subprocesses.flatMap((sp) =>
-        sp.tasks.map((t) => ({
-          ...t,
-          processId: p.id,
-          subprocessId: sp.id,
-        }))
-      )
-    );
+    return state._tasksCache || [];
   },
   updateProcess: (processId, updates) =>
     set((state) => ({
@@ -132,8 +187,8 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
       ),
     })),
   updateSubprocess: (processId, subprocessId, updates) =>
-    set((state) => ({
-      processes: state.processes.map((p) =>
+    set((state) => {
+      const updatedProcesses = state.processes.map((p) =>
         p.id === processId
           ? {
               ...p,
@@ -148,11 +203,31 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
               ),
             }
           : p
-      ),
-    })),
+      );
+      const subprocessesCache = updatedProcesses.flatMap((p) =>
+        p.subprocesses.map((sp) => ({
+          ...sp,
+          processId: p.id,
+        }))
+      );
+      const tasksCache = updatedProcesses.flatMap((p) =>
+        p.subprocesses.flatMap((sp) =>
+          sp.tasks.map((t) => ({
+            ...t,
+            processId: p.id,
+            subprocessId: sp.id,
+          }))
+        )
+      );
+      return {
+        processes: updatedProcesses,
+        _subprocessesCache: subprocessesCache,
+        _tasksCache: tasksCache,
+      };
+    }),
   updateSubprocessStatus: (processId, subprocessId, status) =>
-    set((state) => ({
-      processes: state.processes.map((p) =>
+    set((state) => {
+      const updatedProcesses = state.processes.map((p) =>
         p.id === processId
           ? {
               ...p,
@@ -163,11 +238,31 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
               ),
             }
           : p
-      ),
-    })),
+      );
+      const subprocessesCache = updatedProcesses.flatMap((p) =>
+        p.subprocesses.map((sp) => ({
+          ...sp,
+          processId: p.id,
+        }))
+      );
+      const tasksCache = updatedProcesses.flatMap((p) =>
+        p.subprocesses.flatMap((sp) =>
+          sp.tasks.map((t) => ({
+            ...t,
+            processId: p.id,
+            subprocessId: sp.id,
+          }))
+        )
+      );
+      return {
+        processes: updatedProcesses,
+        _subprocessesCache: subprocessesCache,
+        _tasksCache: tasksCache,
+      };
+    }),
   updateTask: (processId, subprocessId, taskId, updates) =>
-    set((state) => ({
-      processes: state.processes.map((p) =>
+    set((state) => {
+      const updatedProcesses = state.processes.map((p) =>
         p.id === processId
           ? {
               ...p,
@@ -189,11 +284,31 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
               ),
             }
           : p
-      ),
-    })),
+      );
+      const subprocessesCache = updatedProcesses.flatMap((p) =>
+        p.subprocesses.map((sp) => ({
+          ...sp,
+          processId: p.id,
+        }))
+      );
+      const tasksCache = updatedProcesses.flatMap((p) =>
+        p.subprocesses.flatMap((sp) =>
+          sp.tasks.map((t) => ({
+            ...t,
+            processId: p.id,
+            subprocessId: sp.id,
+          }))
+        )
+      );
+      return {
+        processes: updatedProcesses,
+        _subprocessesCache: subprocessesCache,
+        _tasksCache: tasksCache,
+      };
+    }),
   updateTaskStatus: (processId, subprocessId, taskId, status) =>
-    set((state) => ({
-      processes: state.processes.map((p) =>
+    set((state) => {
+      const updatedProcesses = state.processes.map((p) =>
         p.id === processId
           ? {
               ...p,
@@ -215,6 +330,26 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
               ),
             }
           : p
-      ),
-    })),
+      );
+      const subprocessesCache = updatedProcesses.flatMap((p) =>
+        p.subprocesses.map((sp) => ({
+          ...sp,
+          processId: p.id,
+        }))
+      );
+      const tasksCache = updatedProcesses.flatMap((p) =>
+        p.subprocesses.flatMap((sp) =>
+          sp.tasks.map((t) => ({
+            ...t,
+            processId: p.id,
+            subprocessId: sp.id,
+          }))
+        )
+      );
+      return {
+        processes: updatedProcesses,
+        _subprocessesCache: subprocessesCache,
+        _tasksCache: tasksCache,
+      };
+    }),
 }));

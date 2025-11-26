@@ -47,6 +47,7 @@ export default function Subprocesses() {
                 onClick={() => setSelectedSubprocess(subprocess)}
               >
                 <ProgressHint
+                  label="Tasks"
                   total={taskProgress.total}
                   completed={taskProgress.approved}
                 />

@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
+import { formatDate } from "../../utils/formatters";
 
 interface ListItemProps {
   title: string;
@@ -31,15 +32,6 @@ export default function ListItem({
   lastUpdatedAt,
   children,
 }: ListItemProps) {
-  const formatDate = (isoString: string) => {
-    return new Date(isoString).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
   return (
     <div
       onClick={onClick}

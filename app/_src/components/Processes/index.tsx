@@ -1,0 +1,32 @@
+"use client";
+
+import { useProcessData } from "../../hooks/useProcessData";
+import ListItem from "../ListItem";
+
+export default function Processes() {
+  const { processes, isLoading, error, selectedProcess, setSelectedProcess } =
+    useProcessData();
+
+  if (isLoading) return <div className="p-6">Loading processes...</div>;
+  if (error) return <div className="p-6 text-error">{error}</div>;
+
+  return (
+    <div className="p-6 flex flex-col gap-6 bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-50">
+      <h1 className="text-2xl font-bold">Processes</h1>
+      <div className="space-y-4">
+        {processes.map((process) => (
+          <ListItem
+            key={process.id}
+            title={process.name}
+            description={process.description}
+            status={process.status}
+            lastUpdatedBy={process.lastUpdatedBy}
+            lastUpdatedAt={process.lastUpdatedAt}
+            isSelected={selectedProcess?.id === process.id}
+            onClick={() => setSelectedProcess(process)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}

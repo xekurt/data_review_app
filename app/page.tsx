@@ -37,14 +37,14 @@ export default function Home() {
           <Processes />
         </div>
         <div
-          className="flex-1 overflow-auto border-r border-gray-200 dark:border-gray-700"
+          className="flex-1 overflow-auto border-r border-gray-200 dark:bg-gray-950 dark:border-gray-700"
           role="region"
           aria-label="Subprocesses list"
         >
           <Subprocesses />
         </div>
         <div
-          className="flex-1 overflow-auto"
+          className="flex-1 overflow-auto dark:bg-gray-950"
           role="region"
           aria-label="Tasks list"
         >

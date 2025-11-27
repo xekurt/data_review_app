@@ -18,8 +18,27 @@ export default function Subprocesses() {
 
   if (!selectedProcess) {
     return (
-      <div className="p-6 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400">
-        <p className="text-sm">Select a process to view subprocesses</p>
+      <div className="flex flex-col items-center justify-center p-12 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 h-full">
+        <svg
+          className="w-24 h-24 mb-4 text-gray-300 dark:text-gray-600"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={1.5}
+            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+          />
+        </svg>
+        <p className="text-lg font-medium text-gray-600 dark:text-gray-400 mb-2">
+          No Process Selected
+        </p>
+        <p className="text-sm text-center text-gray-500 dark:text-gray-500">
+          Select a process from the left to view its subprocesses
+        </p>
       </div>
     );
   }
@@ -39,9 +58,28 @@ export default function Subprocesses() {
         aria-labelledby="subprocesses-heading"
       >
         {filteredSubprocesses.length === 0 ? (
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            No subprocesses found
-          </p>
+          <div className="flex flex-col items-center justify-center p-12 text-gray-500 dark:text-gray-400">
+            <svg
+              className="w-20 h-20 mb-4 text-gray-300 dark:text-gray-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+              />
+            </svg>
+            <p className="text-base font-medium text-gray-600 dark:text-gray-400 mb-1">
+              No Subprocesses
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-500">
+              This process doesn't have any subprocesses yet
+            </p>
+          </div>
         ) : (
           filteredSubprocesses.map((subprocess, index) => {
             const taskProgress = getSubprocessTaskProgress(subprocess);

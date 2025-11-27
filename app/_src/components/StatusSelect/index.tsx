@@ -12,11 +12,11 @@ const statusOptions: Task["status"][] = ["Pending", "Approved", "Needs Fix"];
 
 const statusColors = {
   Pending:
-    "bg-yellow-900 dark:bg-yellow-900/30 text-black dark:text-yellow-100 border-yellow-300 dark:border-yellow-700",
+    "bg-yellow-900 dark:bg-yellow-900/30 text-yellow-100 border-yellow-300 dark:border-yellow-700",
   Approved:
-    "bg-green-900 dark:bg-green-900/30 text-black dark:text-green-100 border-green-300 dark:border-green-700",
+    "bg-green-900 dark:bg-green-900/30 text-green-100 border-green-300 dark:border-green-700",
   "Needs Fix":
-    "bg-red-900 dark:bg-red-900/30 text-black dark:text-red-100 border-red-300 dark:border-red-700",
+    "bg-red-900 dark:bg-red-900/30 text-red-100 border-red-300 dark:border-red-700",
 };
 
 export default function StatusSelect({
@@ -58,7 +58,7 @@ export default function StatusSelect({
           <option
             key={option}
             value={option}
-            className="cursor-pointer bg-background"
+            className="cursor-pointer bg-background text-black dark:text-white"
           >
             {option}
           </option>

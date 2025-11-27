@@ -27,9 +27,7 @@ This application provides a comprehensive interface for managing complex review 
 - **Progress Indicators**: Visual progress bars showing completion rates
 - **Modern Empty States**: Illustrated placeholders for better UX
 - **Loading States**: Elegant spinner animations during data operations
-- **Responsive Design**: Optimized for various screen sizes
 - **Custom Scrollbars**: Thin, modern scrollbar styling for both themes
-- **Form Shortcuts**: Ctrl/Cmd+Enter to submit comments quickly
 
 ## 🏗️ Architecture
 
@@ -48,41 +46,40 @@ This application provides a comprehensive interface for managing complex review 
 app/
 ├── _src/
 │   ├── components/
-│   │   ├── Processes/          # Process list view
-│   │   ├── Subprocesses/       # Subprocess list view
-│   │   ├── Tasks/              # Task list view
-│   │   ├── ChangelogModal/     # Activity log modal
-│   │   ├── Comments/           # Comment section container
-│   │   ├── CommentList/        # Comment display component
-│   │   ├── CommentForm/        # Add comment form
-│   │   ├── ListItem/           # Reusable list card component
-│   │   ├── StatusSelect/       # Status dropdown (tasks)
-│   │   ├── SelectInput/        # Generic select component
-│   │   ├── ProgressHint/       # Progress bar component
-│   │   ├── Loading/            # Loading spinner component
-│   │   └── header.tsx          # App header with changelog button
+│   │   ├── common/
+│   │   │   ├── Changelog/        # Changelog table component
+│   │   │   ├── ChangelogModal/   # Activity log modal
+│   │   │   ├── Comments/         # Comment section container
+│   │   │   ├── ListItem/         # Reusable list card component
+│   │   │   ├── Loading/          # Loading spinner component
+│   │   │   ├── ProgressHint/     # Progress bar component
+│   │   │   └── SelectInput/      # Generic select component
+│   │   ├── Processes/            # Process list view
+│   │   ├── Subprocesses/         # Subprocess list view
+│   │   ├── Tasks/                # Task list view
+│   │   └── header.tsx            # App header with changelog button
 │   ├── hooks/
-│   │   ├── useProcessData.ts   # Process state hooks
-│   │   └── useChangelogData.ts # Changelog state hooks
+│   │   ├── useChangelogData.ts   # Changelog state hooks
+│   │   └── useProcessData.ts     # Process state hooks
 │   ├── store/
-│   │   ├── processStore.ts     # Main Zustand store
-│   │   ├── changelogStore.ts   # Changelog Zustand store
+│   │   ├── changelogStore.ts     # Changelog Zustand store
+│   │   ├── processStore.ts       # Main Zustand store
 │   │   └── utils/
-│   │       ├── helpers.ts      # Store utility functions
-│   │       └── type.ts         # TypeScript interfaces
+│   │       ├── helpers.ts        # Store utility functions
+│   │       └── type.ts           # TypeScript interfaces
 │   ├── types/
-│   │   └── process.ts          # Core data type definitions
+│   │   └── process.ts            # Core data type definitions
 │   ├── utils/
-│   │   ├── formatters.ts       # Date/string formatting
-│   │   └── progress.ts         # Progress calculation utils
+│   │   ├── formatters.ts         # Date/string formatting
+│   │   └── progress.ts           # Progress calculation utils
 │   └── styles/
-│       └── globals.css         # Global styles & scrollbar
-├── layout.tsx                  # Root layout with fonts
-└── page.tsx                    # Main dashboard page
+│       └── globals.css           # Global styles & scrollbar
+├── layout.tsx                    # Root layout with fonts
+└── page.tsx                      # Main dashboard page
 
 public/
 └── data/
-    └── processes.json          # Initial sample data
+    └── processes.json            # Initial sample data
 ```
 
 ### Data Model
@@ -201,19 +198,7 @@ Subprocesses unlock sequentially:
 - Subsequent subprocesses require previous subprocess's tasks to be 100% approved
 - Visual indication via opacity and disabled state
 
-### 3. Keyboard Navigation
-
-| Component       | Keys                     | Action                    |
-| --------------- | ------------------------ | ------------------------- |
-| List Items      | Enter, Space             | Select/activate item      |
-| Status Select   | Arrow Up/Down/Left/Right | Cycle through statuses    |
-| Status Select   | Enter, Space             | Open dropdown             |
-| Comments Toggle | Enter, Space             | Expand/collapse           |
-| Comment Form    | Ctrl/Cmd + Enter         | Submit comment            |
-| Comment Button  | Enter                    | Submit comment            |
-| All Focusable   | Tab                      | Navigate between elements |
-
-### 4. Accessibility Features
+### 3. Accessibility Features
 
 - ✅ Semantic HTML with proper heading hierarchy
 - ✅ ARIA labels on all interactive elements
@@ -224,7 +209,7 @@ Subprocesses unlock sequentially:
 - ✅ Screen reader announcements for status changes
 - ✅ Keyboard-only navigation support
 
-### 5. Data Persistence Strategy
+### 4. Data Persistence Strategy
 
 - **Initial Load**: Check localStorage → Fetch JSON if empty/corrupted
 - **Updates**: Automatic save to localStorage on every mutation
@@ -272,7 +257,7 @@ Uses Tailwind's default rem-based scale (0-96) with consistent gaps and padding.
 1. **Status Propagation**:
 
    - Set all tasks in a subprocess to "Approved" → Verify subprocess auto-approves
-   - Set all subprocesses + tasks to "Approved" → Verify process auto-approves
+   - Set all subprocesses + tasks to "Approved" → Verify process Pending
 
 2. **Sequential Workflow**:
 
@@ -289,7 +274,6 @@ Uses Tailwind's default rem-based scale (0-96) with consistent gaps and padding.
    - Use Tab to navigate through all interactive elements
    - Use Arrow keys on status selects
    - Use Enter/Space to toggle comments
-   - Use Ctrl+Enter in comment textarea
 
 5. **Changelog**:
    - Make status changes → Open Activity Log → Verify entries with timestamps
@@ -321,7 +305,6 @@ Uses Tailwind's default rem-based scale (0-96) with consistent gaps and padding.
 
 - Utility-first with Tailwind
 - Dark mode via `dark:` prefix
-- Responsive with mobile-first approach
 - Consistent spacing using Tailwind scale
 
 ### Accessibility
@@ -351,14 +334,6 @@ Uses Tailwind's default rem-based scale (0-96) with consistent gaps and padding.
 - [ ] Email notifications
 - [ ] Mobile app (React Native)
 - [ ] Analytics dashboard
-
-## 📄 License
-
-This project is created as part of the Innerspace Mini Dev Challenge.
-
-## 🤝 Contributing
-
-This is a challenge submission project. For questions or feedback, please contact the project maintainer.
 
 ---
 

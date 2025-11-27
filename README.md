@@ -1,43 +1,365 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Data Review Dashboard
 
-## Getting Started
+A modern, hierarchical process management system built with Next.js 16, designed for reviewing and tracking workflows across Processes, Subprocesses, and Tasks.
 
-First, run the development server:
+## 📋 Project Overview
+
+This application provides a comprehensive interface for managing complex review workflows with multi-level status tracking, real-time updates, and collaborative features. Built as part of the Innerspace Mini Dev Challenge, it demonstrates enterprise-grade state management, accessibility best practices, and modern React patterns.
+
+### Key Features
+
+#### ✅ Core Requirements (From Challenge)
+
+- **Three-Level Hierarchy Management**: Navigate through Processes → Subprocesses → Tasks
+- **Status Tracking**: Track "Pending", "Approved", and "Needs Fix" states across all levels
+- **Audit Metadata**: Full tracking of `lastUpdatedBy` and `lastUpdatedAt` for all items
+- **Comment System**: Add contextual comments to any Process, Subprocess, or Task
+- **Activity Log**: Comprehensive changelog tracking all status changes with timestamps
+- **Persistent State**: LocalStorage-based caching for offline support and instant load times
+- **Sequential Workflow**: Subprocess unlocking based on completion of previous items
+- **Status Propagation**: Automatic parent status updates based on child completions
+
+#### 🎨 Enhanced Features
+
+- **Dark Mode Support**: System-preference aware with manual toggle capability
+- **Keyboard Navigation**: Full keyboard accessibility with arrow keys, Enter, Space, Tab
+- **ARIA Labels & Roles**: WCAG 2.1 AA compliant accessibility implementation
+- **Progress Indicators**: Visual progress bars showing completion rates
+- **Modern Empty States**: Illustrated placeholders for better UX
+- **Loading States**: Elegant spinner animations during data operations
+- **Responsive Design**: Optimized for various screen sizes
+- **Custom Scrollbars**: Thin, modern scrollbar styling for both themes
+- **Form Shortcuts**: Ctrl/Cmd+Enter to submit comments quickly
+
+## 🏗️ Architecture
+
+### Technology Stack
+
+- **Framework**: Next.js 16 (App Router, React 19)
+- **Language**: TypeScript 5
+- **State Management**: Zustand 5 with Immer integration
+- **Styling**: Tailwind CSS 4 with custom theme
+- **Data Persistence**: Browser localStorage with JSON serialization
+- **Build Tools**: Turbopack (Next.js native)
+
+### Project Structure
+
+```
+app/
+├── _src/
+│   ├── components/
+│   │   ├── Processes/          # Process list view
+│   │   ├── Subprocesses/       # Subprocess list view
+│   │   ├── Tasks/              # Task list view
+│   │   ├── ChangelogModal/     # Activity log modal
+│   │   ├── Comments/           # Comment section container
+│   │   ├── CommentList/        # Comment display component
+│   │   ├── CommentForm/        # Add comment form
+│   │   ├── ListItem/           # Reusable list card component
+│   │   ├── StatusSelect/       # Status dropdown (tasks)
+│   │   ├── SelectInput/        # Generic select component
+│   │   ├── ProgressHint/       # Progress bar component
+│   │   ├── Loading/            # Loading spinner component
+│   │   └── header.tsx          # App header with changelog button
+│   ├── hooks/
+│   │   ├── useProcessData.ts   # Process state hooks
+│   │   └── useChangelogData.ts # Changelog state hooks
+│   ├── store/
+│   │   ├── processStore.ts     # Main Zustand store
+│   │   ├── changelogStore.ts   # Changelog Zustand store
+│   │   └── utils/
+│   │       ├── helpers.ts      # Store utility functions
+│   │       └── type.ts         # TypeScript interfaces
+│   ├── types/
+│   │   └── process.ts          # Core data type definitions
+│   ├── utils/
+│   │   ├── formatters.ts       # Date/string formatting
+│   │   └── progress.ts         # Progress calculation utils
+│   └── styles/
+│       └── globals.css         # Global styles & scrollbar
+├── layout.tsx                  # Root layout with fonts
+└── page.tsx                    # Main dashboard page
+
+public/
+└── data/
+    └── processes.json          # Initial sample data
+```
+
+### Data Model
+
+```typescript
+interface Process {
+  id: string;
+  name: string;
+  description: string;
+  status: "Pending" | "Approved" | "Needs Fix";
+  lastUpdatedBy: string;
+  lastUpdatedAt: string;
+  subprocesses: Subprocess[];
+  comments: Comment[];
+}
+
+interface Subprocess {
+  id: string;
+  name: string;
+  description: string;
+  status: "Pending" | "Approved" | "Needs Fix";
+  lastUpdatedBy: string;
+  lastUpdatedAt: string;
+  tasks: Task[];
+  comments: Comment[];
+}
+
+interface Task {
+  id: string;
+  name: string;
+  description: string;
+  status: "Pending" | "Approved" | "Needs Fix";
+  lastUpdatedBy: string;
+  lastUpdatedAt: string;
+  comments: Comment[];
+}
+```
+
+### State Management Flow
+
+1. **Initialization**: `useProcessStore` fetches from localStorage → Falls back to `processes.json`
+2. **Cache Strategy**: Flattened caches (`_subprocessesCache`, `_tasksCache`) for efficient lookups
+3. **Updates**: All mutations use Immer for immutability → Update caches → Persist to localStorage
+4. **Selectors**: Direct cache access in hooks to prevent re-render loops
+5. **Changelog**: Separate store tracks all status changes with audit trail
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 20+ or later
+- npm, yarn, pnpm, or bun
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone <repository-url>
+cd data_review_app
+
+# Install dependencies
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
+
+### Development
+
+```bash
+# Start development server
 npm run dev
 # or
 yarn dev
 # or
 pnpm dev
-# or
-bun dev
+
+# Open http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Build & Deploy
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Production build
+npm run build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Start production server
+npm start
 
-## Learn More
+# Lint code
+npm run lint
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 🎯 Feature Implementation Details
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 1. Status Propagation Logic
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Task → Subprocess**:
 
-## Data Sample Generation
+- All tasks "Approved" → Subprocess becomes "Approved"
+- Any task "Needs Fix" → Subprocess becomes "Needs Fix"
+- Otherwise → Subprocess remains "Pending"
 
-- **AI tool used:** GitHub Copilot (GPT-4.1)
-- **Prompt:** Generate realistic data: 2–3 Processes, each with 2–4 Subprocesses, each with 3–6 Tasks. Fields per item: id, name, description, status (Pending | Approved | Needs Fix), lastUpdatedBy, lastUpdatedAt. In README, state: AI tool used, prompt (or summary), what you adjusted manually.
-- **Manual adjustments:** None; all data and structure generated by AI.
-- **Location:** See `app/_src/store/processes.json` for the generated data structure.
+**Subprocess → Process**:
 
-## Deploy on Vercel
+- All subprocesses "Approved" AND all tasks "Approved" → Process becomes "Approved"
+- Any subprocess "Needs Fix" → Process becomes "Needs Fix"
+- Otherwise → Process remains "Pending"
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 2. Sequential Workflow
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Subprocesses unlock sequentially:
+
+- First subprocess always unlocked
+- Subsequent subprocesses require previous subprocess's tasks to be 100% approved
+- Visual indication via opacity and disabled state
+
+### 3. Keyboard Navigation
+
+| Component       | Keys                     | Action                    |
+| --------------- | ------------------------ | ------------------------- |
+| List Items      | Enter, Space             | Select/activate item      |
+| Status Select   | Arrow Up/Down/Left/Right | Cycle through statuses    |
+| Status Select   | Enter, Space             | Open dropdown             |
+| Comments Toggle | Enter, Space             | Expand/collapse           |
+| Comment Form    | Ctrl/Cmd + Enter         | Submit comment            |
+| Comment Button  | Enter                    | Submit comment            |
+| All Focusable   | Tab                      | Navigate between elements |
+
+### 4. Accessibility Features
+
+- ✅ Semantic HTML with proper heading hierarchy
+- ✅ ARIA labels on all interactive elements
+- ✅ ARIA roles (list, listitem, dialog, banner, main, region)
+- ✅ ARIA states (expanded, selected, disabled, live)
+- ✅ Focus indicators with ring styles
+- ✅ Skip navigation patterns
+- ✅ Screen reader announcements for status changes
+- ✅ Keyboard-only navigation support
+
+### 5. Data Persistence Strategy
+
+- **Initial Load**: Check localStorage → Fetch JSON if empty/corrupted
+- **Updates**: Automatic save to localStorage on every mutation
+- **Cache Invalidation**: Manual localStorage clear triggers fresh fetch
+- **Error Handling**: Try-catch with fallback and console logging
+
+## 📊 Data Sample Generation
+
+- **AI Tool Used**: GitHub Copilot (GPT-4.1)
+- **Prompt**: "Generate realistic data: 2–3 Processes, each with 2–4 Subprocesses, each with 3–6 Tasks. Fields per item: id, name, description, status (Pending | Approved | Needs Fix), lastUpdatedBy, lastUpdatedAt."
+- **Manual Adjustments**: None; all data and structure generated by AI
+- **Location**: `public/data/processes.json`
+
+## 🎨 Design System
+
+### Color Palette
+
+- **Primary**: Teal (#14a8c9) - Actions, focus states
+- **Secondary**: Green (#22c55e) - Success, approved
+- **Status Colors**:
+  - Pending: Yellow (#fbbf24)
+  - Approved: Green (#22c55e)
+  - Needs Fix: Red (#ef4444)
+
+### Typography
+
+- **Font Family**: Geist Sans (UI), Geist Mono (Code)
+- **Scale**: sm (12px) → base (16px) → lg (18px) → xl (20px) → 2xl (24px)
+
+### Spacing Scale
+
+Uses Tailwind's default rem-based scale (0-96) with consistent gaps and padding.
+
+### Animations
+
+- `fade-in`: 300ms opacity transition
+- `slide-up`: 400ms transform + opacity
+- `spin`: Continuous rotation for loading states
+- `pulse`: Breathing effect for loading text
+
+## 🧪 Testing the Application
+
+### Manual Test Cases
+
+1. **Status Propagation**:
+
+   - Set all tasks in a subprocess to "Approved" → Verify subprocess auto-approves
+   - Set all subprocesses + tasks to "Approved" → Verify process auto-approves
+
+2. **Sequential Workflow**:
+
+   - Try clicking second subprocess before completing first → Should be disabled
+   - Complete all tasks in first subprocess → Second should unlock
+
+3. **Persistence**:
+
+   - Make changes → Refresh page → Verify changes persist
+   - Open DevTools → Clear localStorage → Refresh → Data reloads from JSON
+
+4. **Keyboard Navigation**:
+
+   - Use Tab to navigate through all interactive elements
+   - Use Arrow keys on status selects
+   - Use Enter/Space to toggle comments
+   - Use Ctrl+Enter in comment textarea
+
+5. **Changelog**:
+   - Make status changes → Open Activity Log → Verify entries with timestamps
+   - Check order (newest first)
+
+## 🔧 Configuration Files
+
+- `next.config.ts`: Next.js configuration
+- `tailwind.config.ts`: Custom theme, colors, animations
+- `tsconfig.json`: TypeScript compiler options
+- `eslint.config.mjs`: Linting rules
+- `postcss.config.mjs`: PostCSS with Tailwind
+
+## 📝 Code Patterns & Conventions
+
+### Component Structure
+
+- Use `"use client"` for interactive components
+- Hooks at top, handlers grouped, early returns for loading/error states
+- Destructure from custom hooks, not direct store access
+
+### State Updates
+
+- Always use Immer's `produce` for nested updates
+- Update `lastUpdatedAt` on every mutation
+- Recalculate caches after mutations affecting nested data
+
+### Styling
+
+- Utility-first with Tailwind
+- Dark mode via `dark:` prefix
+- Responsive with mobile-first approach
+- Consistent spacing using Tailwind scale
+
+### Accessibility
+
+- Wrap interactive divs with semantic HTML when possible
+- Add ARIA labels to all custom controls
+- Provide keyboard alternatives for all mouse actions
+- Test with keyboard-only navigation
+
+## 🚧 Known Limitations
+
+- No backend integration (localStorage only)
+- No user authentication system
+- No real-time collaboration features
+- No data export functionality
+- No advanced filtering/search
+
+## 🔮 Future Enhancements
+
+- [ ] Backend API integration (REST/GraphQL)
+- [ ] Real-time updates with WebSockets
+- [ ] User authentication & permissions
+- [ ] Advanced search & filtering
+- [ ] Bulk operations (multi-select)
+- [ ] Data export (CSV, PDF)
+- [ ] File attachments on comments
+- [ ] Email notifications
+- [ ] Mobile app (React Native)
+- [ ] Analytics dashboard
+
+## 📄 License
+
+This project is created as part of the Innerspace Mini Dev Challenge.
+
+## 🤝 Contributing
+
+This is a challenge submission project. For questions or feedback, please contact the project maintainer.
+
+---
+
+**Built with ❤️ using Next.js 16, React 19, TypeScript, Zustand, and Tailwind CSS**

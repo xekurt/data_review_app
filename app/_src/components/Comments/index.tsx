@@ -10,7 +10,6 @@ interface CommentsProps {
 }
 
 export default function Comments({ comments, onAddComment }: CommentsProps) {
-  console.info("COMENTS : ", comments);
   const [commentText, setCommentText] = useState("");
   const [authorName, setAuthorName] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);

@@ -18,7 +18,7 @@ export default function Processes() {
     setSelectedProcess,
     addProcessComment,
   } = useProcessData();
-  console.info(processes);
+
   if (isLoading) return <div className="p-6">Loading processes...</div>;
   if (error) return <div className="p-6 text-error">{error}</div>;
 

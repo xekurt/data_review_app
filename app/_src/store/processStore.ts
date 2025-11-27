@@ -52,7 +52,9 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
 
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      const response = await fetch("/data/processes.json");
+      const basePath =
+        process.env.NODE_ENV === "production" ? "/data_review_app" : "";
+      const response = await fetch(`${basePath}/data/processes.json`);
       if (!response.ok) throw new Error("Failed to fetch processes");
       const processes = await response.json();
 

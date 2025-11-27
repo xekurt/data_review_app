@@ -98,7 +98,7 @@ export default function Comments({ comments, onAddComment }: CommentsProps) {
             <button
               type="submit"
               disabled={!commentText.trim() || !authorName.trim()}
-              className="w-full px-4 py-2 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:cursor-not-allowed rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+              className="w-full px-4 py-2 text-sm font-medium bg-gray-900 cursor-pointer text-white bg-primary-500 hover:bg-primary-600 disabled:bg-gray-400 disabled:text-gray-200 dark:disabled:bg-gray-600 dark:disabled:text-gray-400 disabled:cursor-not-allowed rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900"
             >
               Add Comment
             </button>

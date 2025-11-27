@@ -1,7 +1,6 @@
 "use client";
 
 import { useProcessStore } from "../store/processStore";
-import { useChangelogStore } from "../store/changelogStore";
 import { useEffect } from "react";
 
 /* ===== PROCESS HOOK ===== */
@@ -20,7 +19,6 @@ export const useProcessData = () => {
     (state) => state.updateProcessStatus
   );
   const addProcessComment = useProcessStore((state) => state.addProcessComment);
-  const changelog = useChangelogStore((state) => state.getChangelog());
 
   return {
     processes,
@@ -31,7 +29,6 @@ export const useProcessData = () => {
     setSelectedProcess,
     updateProcessStatus,
     addProcessComment,
-    changelog,
   };
 };
 

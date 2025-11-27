@@ -6,14 +6,12 @@ import Processes from "./_src/components/Processes";
 import Subprocesses from "./_src/components/Subprocesses";
 import Tasks from "./_src/components/Tasks";
 import ChangelogModal from "./_src/components/ChangelogModal";
-import {
-  useInitializeProcesses,
-  useProcessData,
-} from "./_src/hooks/useProcessData";
+import { useInitializeProcesses } from "./_src/hooks/useProcessData";
+import { useChangelogData } from "./_src/hooks/useChangelogData";
 
 export default function Home() {
   useInitializeProcesses();
-  const { changelog } = useProcessData();
+  const { changelog } = useChangelogData();
   const [isChangelogOpen, setIsChangelogOpen] = useState(false);
 
   return (

@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { produce } from "immer";
 
-import type { Process, Task } from "../types/process";
+import type { Process, Subprocess, Task } from "../types/process";
 import {
   createChangelogEntry,
   createComment,
@@ -11,8 +11,8 @@ import {
   persistToStorage,
   recalculateCaches,
   STORAGE_KEYS,
-} from "./helpers";
-import type { ProcessStore } from "./type";
+} from "./utils/helpers";
+import type { ProcessStore } from "./utils/type";
 import { useChangelogStore } from "./changelogStore";
 
 export const useProcessStore = create<ProcessStore>((set, get) => ({
@@ -183,10 +183,10 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
         }
 
         const allApproved = subprocessToUpdate.tasks.every(
-          (t) => t.status === "Approved"
+          (t: Task) => t.status === "Approved"
         );
         const anyNeedsFix = subprocessToUpdate.tasks.some(
-          (t) => t.status === "Needs Fix"
+          (t: Task) => t.status === "Needs Fix"
         );
 
         const subprocessStatus: Task["status"] = allApproved
@@ -209,10 +209,10 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
         }
 
         const allSubprocessesApproved = processToUpdate.subprocesses.every(
-          (sp) => sp.status === "Approved"
+          (sp: Subprocess) => sp.status === "Approved"
         );
-        const allTasksApproved = processToUpdate.subprocesses.every((sp) =>
-          sp.tasks.every((t) => t.status === "Approved")
+        const allTasksApproved = processToUpdate.subprocesses.every(
+          (sp: Subprocess) => sp.tasks.every((t) => t.status === "Approved")
         );
 
         if (allSubprocessesApproved && allTasksApproved) {

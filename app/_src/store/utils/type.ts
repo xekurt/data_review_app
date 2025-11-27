@@ -1,4 +1,4 @@
-import type { Process, Subprocess, Task } from "../types/process";
+import type { Process, Subprocess, Task } from "../../types/process";
 
 export interface ProcessStore {
   processes: Process[];

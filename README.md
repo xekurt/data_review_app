@@ -174,6 +174,24 @@ npm start
 npm run lint
 ```
 
+### Deploy to GitHub Pages
+
+**Automatic Deployment (Recommended)**:
+1. Push your code to GitHub
+2. Go to repository Settings → Pages
+3. Under "Build and deployment", select "GitHub Actions" as source
+4. Push to main branch - deployment happens automatically via GitHub Actions
+
+**Manual Deployment**:
+```bash
+# Build and deploy manually
+npm run deploy
+```
+
+**Live Demo**: https://xekurt.github.io/data_review_app/
+
+> **Note**: After first deployment, it may take a few minutes for GitHub Pages to become available.
+
 ## 🎯 Feature Implementation Details
 
 ### 1. Status Propagation Logic

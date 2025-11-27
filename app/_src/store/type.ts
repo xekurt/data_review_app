@@ -31,26 +31,14 @@ export interface ProcessStore {
   getTasks: () => (Task & { processId: string; subprocessId: string })[];
   getChangelog: () => ChangelogEntry[];
 
-  updateProcess: (processId: string, updates: Partial<Process>) => void;
   updateProcessStatus: (processId: string, status: Process["status"]) => void;
 
-  updateSubprocess: (
-    processId: string,
-    subprocessId: string,
-    updates: Partial<Subprocess>
-  ) => void;
   updateSubprocessStatus: (
     processId: string,
     subprocessId: string,
     status: Subprocess["status"]
   ) => void;
 
-  updateTask: (
-    processId: string,
-    subprocessId: string,
-    taskId: string,
-    updates: Partial<Task>
-  ) => void;
   updateTaskStatus: (
     processId: string,
     subprocessId: string,

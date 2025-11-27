@@ -29,8 +29,7 @@ Core responsibilities:
 - **Single source of truth:** `processes[]` array holds all data
 - **Selection state:** Tracks active process/subprocess/task for UI context
 - **Initialization:** On first app load, fetches `processes.json`, caches to localStorage, then persists all updates
-- **Computed selectors:** `getSubprocesses()` and `getTasks()` flatten nested data with parent IDs for easy access
-- **Update patterns:** Immutably map and update nested objects (see `updateTask` for deep update example)
+- **Computed selectors:** `getSubprocesses()` and `getTasks()` flatten nested data with
 - **localStorage key:** Defined in `app/_src/store/constants.ts` as `STORAGE_KEYS.PROCESSES`
 
 ### React Hooks Layer
@@ -97,37 +96,6 @@ When updating nested task/subprocess in a process, always:
 3. For subprocess/task updates, map the respective nested array
 4. Always set `lastUpdatedAt` to current ISO timestamp
 5. Return new object to maintain immutability
-
-**Example pattern from store:**
-
-```ts
-updateTask: (processId, subprocessId, taskId, updates) =>
-  set((state) => ({
-    processes: state.processes.map((p) =>
-      p.id === processId
-        ? {
-            ...p,
-            subprocesses: p.subprocesses.map((sp) =>
-              sp.id === subprocessId
-                ? {
-                    ...sp,
-                    tasks: sp.tasks.map((t) =>
-                      t.id === taskId
-                        ? {
-                            ...t,
-                            ...updates,
-                            lastUpdatedAt: new Date().toISOString(),
-                          }
-                        : t
-                    ),
-                  }
-                : sp
-            ),
-          }
-        : p
-    ),
-  }));
-```
 
 ### localStorage Persistence
 

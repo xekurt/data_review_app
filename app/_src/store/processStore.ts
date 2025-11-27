@@ -90,17 +90,6 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
     return state.changelog;
   },
 
-  updateProcess: (processId, updates) =>
-    set((state) => {
-      const updatedProcesses = state.processes.map((p) =>
-        p.id === processId
-          ? { ...p, ...updates, lastUpdatedAt: new Date().toISOString() }
-          : p
-      );
-      persistToStorage(updatedProcesses);
-      return { processes: updatedProcesses };
-    }),
-
   updateProcessStatus: (processId, status) =>
     set((state) => {
       const process = state.processes.find((p) => p.id === processId);
@@ -122,34 +111,6 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
       return {
         processes: updatedProcesses,
         changelog: [...state.changelog, changelogEntry],
-      };
-    }),
-
-  updateSubprocess: (processId, subprocessId, updates) =>
-    set((state) => {
-      const updatedProcesses = state.processes.map((p) =>
-        p.id === processId
-          ? {
-              ...p,
-              subprocesses: p.subprocesses.map((sp) =>
-                sp.id === subprocessId
-                  ? {
-                      ...sp,
-                      ...updates,
-                      lastUpdatedAt: new Date().toISOString(),
-                    }
-                  : sp
-              ),
-            }
-          : p
-      );
-      const { subprocessesCache, tasksCache } =
-        recalculateCaches(updatedProcesses);
-      persistToStorage(updatedProcesses);
-      return {
-        processes: updatedProcesses,
-        _subprocessesCache: subprocessesCache,
-        _tasksCache: tasksCache,
       };
     }),
 
@@ -188,41 +149,6 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
         _subprocessesCache: subprocessesCache,
         _tasksCache: tasksCache,
         changelog: [...state.changelog, changelogEntry],
-      };
-    }),
-
-  updateTask: (processId, subprocessId, taskId, updates) =>
-    set((state) => {
-      const updatedProcesses = state.processes.map((p) =>
-        p.id === processId
-          ? {
-              ...p,
-              subprocesses: p.subprocesses.map((sp) =>
-                sp.id === subprocessId
-                  ? {
-                      ...sp,
-                      tasks: sp.tasks.map((t) =>
-                        t.id === taskId
-                          ? {
-                              ...t,
-                              ...updates,
-                              lastUpdatedAt: new Date().toISOString(),
-                            }
-                          : t
-                      ),
-                    }
-                  : sp
-              ),
-            }
-          : p
-      );
-      const { subprocessesCache, tasksCache } =
-        recalculateCaches(updatedProcesses);
-      persistToStorage(updatedProcesses);
-      return {
-        processes: updatedProcesses,
-        _subprocessesCache: subprocessesCache,
-        _tasksCache: tasksCache,
       };
     }),
 

@@ -3,7 +3,7 @@
 import { useProcessData } from "../../hooks/useProcessData";
 import ListItem from "../common/ListItem";
 import ProgressHint from "../common/ProgressHint";
-
+import Loading from "../common/Loading";
 import {
   getProcessTaskProgress,
   getProcessSubprocessProgress,
@@ -21,7 +21,7 @@ export default function Processes() {
     updateProcessStatus,
   } = useProcessData();
 
-  if (isLoading) return <div className="p-6">Loading processes...</div>;
+  if (isLoading) return <Loading message="Loading processes..." size="md" />;
   if (error) return <div className="p-6 text-error">{error}</div>;
 
   return (

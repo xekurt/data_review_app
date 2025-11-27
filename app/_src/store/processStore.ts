@@ -103,7 +103,6 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
       );
 
       const updatedProcesses = produce(state.processes, (draft: Process[]) => {
-        console.info("draft: ", draft);
         const processToUpdate = findProcess(draft, processId);
         if (processToUpdate) {
           processToUpdate.status = status;

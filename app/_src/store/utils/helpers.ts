@@ -1,4 +1,10 @@
-import { ChangelogEntry, Process, Comment } from "../types/process";
+import {
+  ChangelogEntry,
+  Comment,
+  Process,
+  Subprocess,
+  Task,
+} from "../../types/process";
 
 export const STORAGE_KEYS = {
   PROCESSES: "process-store",
@@ -55,9 +61,9 @@ export const findProcess = (processes: Process[], processId: string) =>
 export const findSubprocess = (
   process: Process | undefined,
   subprocessId: string
-) => process?.subprocesses.find((sp) => sp.id === subprocessId);
+) => process?.subprocesses.find((sp: Subprocess) => sp.id === subprocessId);
 
 export const findTask = (
   subprocess: ReturnType<typeof findSubprocess>,
   taskId: string
-) => subprocess?.tasks.find((t) => t.id === taskId);
+) => subprocess?.tasks.find((t: Task) => t.id === taskId);

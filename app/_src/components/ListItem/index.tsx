@@ -19,6 +19,7 @@ interface ListItemProps {
   processId?: string;
   subprocessId?: string;
   onStatusChange?: (status: Task["status"]) => void;
+  isDisabled?: boolean;
 }
 
 const statusColors = {
@@ -40,15 +41,22 @@ export default function ListItem({
   children,
   isTask = false,
   onStatusChange,
+  isDisabled = false,
 }: ListItemProps) {
   return (
     <div
-      onClick={onClick}
+      onClick={isDisabled ? undefined : onClick}
       className={`border-2 rounded-lg p-4 transition-all ${
-        onClick ? "cursor-pointer" : ""
+        isDisabled
+          ? "opacity-50 cursor-not-allowed bg-gray-50 dark:bg-gray-900/50"
+          : onClick
+          ? "cursor-pointer"
+          : ""
       } ${
-        isSelected
+        isSelected && !isDisabled
           ? "border-primary-500 bg-primary-50 dark:bg-primary-900/20 shadow-lg ring-2 ring-primary-500 ring-opacity-30"
+          : isDisabled
+          ? "border-gray-300 dark:border-gray-800"
           : "border-gray-200 dark:border-gray-700 hover:shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
       }`}
     >

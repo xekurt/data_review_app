@@ -37,8 +37,17 @@ export default function Subprocesses() {
             No subprocesses found
           </p>
         ) : (
-          filteredSubprocesses.map((subprocess) => {
+          filteredSubprocesses.map((subprocess, index) => {
             const taskProgress = getSubprocessTaskProgress(subprocess);
+
+            // Check if previous subprocess is fully approved
+            let isDisabled = false;
+            if (index > 0) {
+              const previousSubprocess = filteredSubprocesses[index - 1];
+              const previousProgress =
+                getSubprocessTaskProgress(previousSubprocess);
+              isDisabled = previousProgress.approved !== previousProgress.total;
+            }
 
             return (
               <ListItem
@@ -50,6 +59,7 @@ export default function Subprocesses() {
                 lastUpdatedAt={subprocess.lastUpdatedAt}
                 isSelected={selectedSubprocess?.id === subprocess.id}
                 onClick={() => setSelectedSubprocess(subprocess)}
+                isDisabled={isDisabled}
               >
                 <ProgressHint
                   label="Tasks"

@@ -7,13 +7,19 @@ const Header: React.FC<HeaderProps> = ({
   onChangelogClick,
   changelogCount = 0,
 }) => (
-  <header className="p-4 bg-gray-100 border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700 flex items-center justify-between">
+  <header
+    className="p-4 bg-gray-100 border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700 flex items-center justify-between"
+    role="banner"
+  >
     <h1 className="m-0 text-2xl font-semibold text-gray-900 dark:text-gray-100">
       Process review dashboard
     </h1>
     {onChangelogClick && (
       <button
         onClick={onChangelogClick}
+        aria-label={`Open activity log. ${changelogCount} ${
+          changelogCount === 1 ? "change" : "changes"
+        } recorded.`}
         className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
       >
         <svg

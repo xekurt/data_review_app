@@ -29,13 +29,39 @@ export default function StatusSelect({
     onStatusChange(e.target.value as Task["status"]);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLSelectElement>) => {
+    e.stopPropagation();
+
+    // Cycle through statuses with arrow keys
+    if (disabled) return;
+
+    const currentIndex = statusOptions.indexOf(status);
+
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+      e.preventDefault();
+      const nextIndex = (currentIndex + 1) % statusOptions.length;
+      onStatusChange(statusOptions[nextIndex]);
+    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+      e.preventDefault();
+      const prevIndex =
+        (currentIndex - 1 + statusOptions.length) % statusOptions.length;
+      onStatusChange(statusOptions[prevIndex]);
+    } else if (e.key === "Enter" || e.key === " ") {
+      // Let the native select behavior handle opening the dropdown
+      e.stopPropagation();
+    }
+  };
+
   return (
     <div className="relative inline-block">
       <select
         value={status}
         onChange={handleChange}
+        onKeyDown={handleKeyDown}
         disabled={disabled}
         onClick={(e) => e.stopPropagation()}
+        aria-label={`Change task status. Current status: ${status}`}
+        tabIndex={disabled ? -1 : 0}
         className={`
           appearance-none text-xs font-semibold px-3 py-1.5 pr-7 rounded-md 
           border-2 cursor-pointer transition-all duration-200 whitespace-nowrap

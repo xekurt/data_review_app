@@ -23,6 +23,38 @@ export default function Comments({ comments, onAddComment }: CommentsProps) {
     }
   };
 
+  const handleToggle = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const handleToggleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleToggle();
+    }
+  };
+
+  const handleTextareaKeyDown = (
+    e: React.KeyboardEvent<HTMLTextAreaElement>
+  ) => {
+    // Allow Ctrl+Enter or Cmd+Enter to submit
+    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+      e.preventDefault();
+      if (commentText.trim() && authorName.trim()) {
+        handleSubmit(e as any);
+      }
+    }
+  };
+
+  const handleButtonKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (commentText.trim() && authorName.trim()) {
+        handleSubmit(e as any);
+      }
+    }
+  };
+
   const sortedComments = [...comments].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
@@ -30,8 +62,14 @@ export default function Comments({ comments, onAddComment }: CommentsProps) {
   return (
     <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
       <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="flex items-center justify-between w-full text-left mb-3 cursor-pointer"
+        onClick={handleToggle}
+        onKeyDown={handleToggleKeyDown}
+        aria-expanded={isExpanded}
+        aria-controls="comments-section"
+        aria-label={`${isExpanded ? "Collapse" : "Expand"} comments section. ${
+          comments.length
+        } ${comments.length === 1 ? "comment" : "comments"}.`}
+        className="flex items-center justify-between w-full text-left mb-3 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900 rounded"
       >
         <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
           Comments ({comments.length})
@@ -54,9 +92,13 @@ export default function Comments({ comments, onAddComment }: CommentsProps) {
       </button>
 
       {isExpanded && (
-        <div className="space-y-4 animate-fade-in">
+        <div id="comments-section" className="space-y-4 animate-fade-in">
           {/* Comment List */}
-          <div className="space-y-3 max-h-64 overflow-y-auto">
+          <div
+            className="space-y-3 max-h-64 overflow-y-auto"
+            role="list"
+            aria-label="Comments list"
+          >
             {sortedComments.length === 0 ? (
               <p className="text-sm text-gray-500 dark:text-gray-400 italic">
                 No comments yet
@@ -65,6 +107,10 @@ export default function Comments({ comments, onAddComment }: CommentsProps) {
               sortedComments.map((comment) => (
                 <div
                   key={comment.id}
+                  role="listitem"
+                  aria-label={`Comment by ${comment.author} on ${formatDate(
+                    comment.createdAt
+                  )}`}
                   className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3 border border-gray-200 dark:border-gray-700"
                 >
                   <p className="text-sm text-gray-900 dark:text-gray-100 mb-2">
@@ -80,24 +126,34 @@ export default function Comments({ comments, onAddComment }: CommentsProps) {
           </div>
 
           {/* Add Comment Form */}
-          <form onSubmit={handleSubmit} className="space-y-2">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-2"
+            aria-label="Add new comment"
+          >
             <input
               type="text"
               value={authorName}
               onChange={(e) => setAuthorName(e.target.value)}
               placeholder="Your name"
+              aria-label="Your name"
+              required
               className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
             />
             <textarea
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
+              onKeyDown={handleTextareaKeyDown}
               placeholder="Add a comment..."
+              aria-label="Comment text"
+              required
               rows={3}
               className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none resize-none"
             />
             <button
               type="submit"
               disabled={!commentText.trim() || !authorName.trim()}
+              onKeyDown={handleButtonKeyDown}
               className="w-full px-4 py-2 text-sm font-medium bg-gray-900 cursor-pointer text-white bg-primary-500 hover:bg-primary-600 disabled:bg-gray-400 disabled:text-gray-200 dark:disabled:bg-gray-600 dark:disabled:text-gray-400 disabled:cursor-not-allowed rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900"
             >
               Add Comment

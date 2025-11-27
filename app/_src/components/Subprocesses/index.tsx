@@ -30,8 +30,14 @@ export default function Subprocesses() {
 
   return (
     <div className="p-6 flex flex-col gap-6 bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-50">
-      <h1 className="text-2xl font-bold">Subprocesses</h1>
-      <div className="space-y-4">
+      <h1 className="text-2xl font-bold" id="subprocesses-heading">
+        Subprocesses
+      </h1>
+      <div
+        className="space-y-4"
+        role="list"
+        aria-labelledby="subprocesses-heading"
+      >
         {filteredSubprocesses.length === 0 ? (
           <p className="text-sm text-gray-500 dark:text-gray-400">
             No subprocesses found

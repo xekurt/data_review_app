@@ -27,24 +27,33 @@ export default function ChangelogModal({
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="changelog-modal-title"
+    >
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
+        aria-hidden="true"
       />
 
       {/* Modal */}
       <div className="relative z-10 w-full max-w-5xl max-h-[90vh] m-4 bg-white dark:bg-gray-900 rounded-lg shadow-2xl flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          <h2
+            id="changelog-modal-title"
+            className="text-2xl font-bold text-gray-900 dark:text-gray-100"
+          >
             Activity Log ({entries.length} changes)
           </h2>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            aria-label="Close modal"
+            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+            aria-label="Close activity log modal"
           >
             <svg
               className="w-6 h-6 text-gray-600 dark:text-gray-400"
@@ -72,30 +81,53 @@ export default function ChangelogModal({
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-sm border-collapse">
-                <thead className="sticky top-0 bg-gray-100 dark:bg-gray-800 z-10">
-                  <tr>
-                    <th className="text-left p-3 font-semibold text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600">
+              <table
+                className="w-full text-sm border-collapse"
+                role="table"
+                aria-label="Activity log entries"
+              >
+                <thead
+                  className="sticky top-0 bg-gray-100 dark:bg-gray-800 z-10"
+                  role="rowgroup"
+                >
+                  <tr role="row">
+                    <th
+                      scope="col"
+                      className="text-left p-3 font-semibold text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600"
+                    >
                       What
                     </th>
-                    <th className="text-left p-3 font-semibold text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600">
+                    <th
+                      scope="col"
+                      className="text-left p-3 font-semibold text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600"
+                    >
                       Type
                     </th>
-                    <th className="text-left p-3 font-semibold text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600">
+                    <th
+                      scope="col"
+                      className="text-left p-3 font-semibold text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600"
+                    >
                       Status Change
                     </th>
-                    <th className="text-left p-3 font-semibold text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600">
+                    <th
+                      scope="col"
+                      className="text-left p-3 font-semibold text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600"
+                    >
                       Who
                     </th>
-                    <th className="text-left p-3 font-semibold text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600">
+                    <th
+                      scope="col"
+                      className="text-left p-3 font-semibold text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600"
+                    >
                       When
                     </th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody role="rowgroup">
                   {sortedEntries.map((entry) => (
                     <tr
                       key={entry.id}
+                      role="row"
                       className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
                     >
                       <td className="p-3 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600">
@@ -141,6 +173,7 @@ export default function ChangelogModal({
         <div className="flex justify-end p-6 border-t border-gray-200 dark:border-gray-700">
           <button
             onClick={onClose}
+            aria-label="Close activity log modal"
             className="px-6 py-2 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
           >
             Close

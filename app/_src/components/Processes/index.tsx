@@ -25,8 +25,14 @@ export default function Processes() {
 
   return (
     <div className="p-6 flex flex-col gap-6 bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-50">
-      <h1 className="text-2xl font-bold">Processes</h1>
-      <div className="space-y-4">
+      <h1 className="text-2xl font-bold" id="processes-heading">
+        Processes
+      </h1>
+      <div
+        className="space-y-4"
+        role="list"
+        aria-labelledby="processes-heading"
+      >
         {processes.map((process) => {
           const taskProgress = getProcessTaskProgress(process);
           const subprocessProgress = getProcessSubprocessProgress(process);
@@ -56,7 +62,11 @@ export default function Processes() {
               </div>
 
               {process.status === "Pending" && (
-                <div className="mt-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg flex items-center justify-between">
+                <div
+                  className="mt-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg flex items-center justify-between"
+                  role="alert"
+                  aria-live="polite"
+                >
                   <p className="text-sm text-green-800 dark:text-green-200">
                     All tasks and subprocesses are approved. Ready to approve
                     this process?
@@ -66,7 +76,8 @@ export default function Processes() {
                       e.stopPropagation();
                       updateProcessStatus(process.id, "Approved");
                     }}
-                    className="ml-4 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors whitespace-nowrap"
+                    aria-label={`Approve ${process.name} process`}
+                    className="ml-4 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900"
                   >
                     Approve Process
                   </button>

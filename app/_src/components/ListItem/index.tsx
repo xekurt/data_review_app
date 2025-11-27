@@ -46,6 +46,17 @@ export default function ListItem({
   return (
     <div
       onClick={isDisabled ? undefined : onClick}
+      onKeyDown={(e) => {
+        if (!isDisabled && onClick && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          onClick();
+        }
+      }}
+      role="listitem"
+      tabIndex={isDisabled ? -1 : 0}
+      aria-selected={isSelected}
+      aria-disabled={isDisabled}
+      aria-label={`${title}. Status: ${status}. ${description}`}
       className={`border-2 rounded-lg p-4 transition-all ${
         isDisabled
           ? "opacity-50 cursor-not-allowed bg-gray-50 dark:bg-gray-900/50"

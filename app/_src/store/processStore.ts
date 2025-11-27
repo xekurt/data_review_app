@@ -1,5 +1,11 @@
 import { create } from "zustand";
-import type { Process, Subprocess, Task, Comment, ChangelogEntry } from "../types/process";
+import type {
+  Process,
+  Subprocess,
+  Task,
+  Comment,
+  ChangelogEntry,
+} from "../types/process";
 import { STORAGE_KEYS } from "./constants";
 
 /**

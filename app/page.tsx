@@ -1,19 +1,27 @@
 "use client";
 
+import { useState } from "react";
 import Header from "./_src/components/header";
 import Processes from "./_src/components/Processes";
 import Subprocesses from "./_src/components/Subprocesses";
 import Tasks from "./_src/components/Tasks";
-import Changelog from "./_src/components/Changelog";
-import { useInitializeProcesses, useProcessData } from "./_src/hooks/useProcessData";
+import ChangelogModal from "./_src/components/ChangelogModal";
+import {
+  useInitializeProcesses,
+  useProcessData,
+} from "./_src/hooks/useProcessData";
 
 export default function Home() {
   useInitializeProcesses();
   const { changelog } = useProcessData();
+  const [isChangelogOpen, setIsChangelogOpen] = useState(false);
 
   return (
     <section className="h-screen flex flex-col">
-      <Header />
+      <Header
+        onChangelogClick={() => setIsChangelogOpen(true)}
+        changelogCount={changelog.length}
+      />
       <div className="flex flex-1 overflow-hidden">
         <div className="flex-1 overflow-auto border-r border-gray-200 dark:border-gray-700">
           <Processes />
@@ -21,16 +29,15 @@ export default function Home() {
         <div className="flex-1 overflow-auto border-r border-gray-200 dark:border-gray-700">
           <Subprocesses />
         </div>
-        <div className="flex-1 overflow-auto border-r border-gray-200 dark:border-gray-700">
+        <div className="flex-1 overflow-auto">
           <Tasks />
         </div>
-        <div className="flex-1 overflow-auto">
-          <div className="p-6 bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-50">
-            <h1 className="text-2xl font-bold mb-4">Activity Log</h1>
-            <Changelog entries={changelog} />
-          </div>
-        </div>
       </div>
+      <ChangelogModal
+        entries={changelog}
+        isOpen={isChangelogOpen}
+        onClose={() => setIsChangelogOpen(false)}
+      />
     </section>
   );
 }

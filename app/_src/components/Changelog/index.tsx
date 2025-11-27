@@ -65,11 +65,15 @@ export default function Changelog({ entries }: ChangelogProps) {
                     </span>
                   </td>
                   <td className="p-2 border border-gray-300 dark:border-gray-600">
-                    <span className={`font-medium ${statusColors[entry.oldStatus]}`}>
+                    <span
+                      className={`font-medium ${statusColors[entry.oldStatus]}`}
+                    >
                       {entry.oldStatus}
                     </span>
                     <span className="mx-1 text-gray-400">→</span>
-                    <span className={`font-medium ${statusColors[entry.newStatus]}`}>
+                    <span
+                      className={`font-medium ${statusColors[entry.newStatus]}`}
+                    >
                       {entry.newStatus}
                     </span>
                   </td>

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { Process, Subprocess, Task, Comment } from "../types/process";
+import type { Process, Subprocess, Task, Comment, ChangelogEntry } from "../types/process";
 import { STORAGE_KEYS } from "./constants";
 
 /**
@@ -28,6 +28,8 @@ interface ProcessStore {
   _subprocessesCache: (Subprocess & { processId: string })[] | null;
   /** Flattened cache of all tasks with parent process and subprocess IDs */
   _tasksCache: (Task & { processId: string; subprocessId: string })[] | null;
+  /** History of all status changes across processes, subprocesses, and tasks */
+  changelog: ChangelogEntry[];
 
   // ===== SETTERS =====
   /** Set processes and recalculate caches. Persists to localStorage. */
@@ -52,6 +54,8 @@ interface ProcessStore {
   getSubprocesses: () => (Subprocess & { processId: string })[];
   /** Get flattened array of all tasks with parent processId and subprocessId */
   getTasks: () => (Task & { processId: string; subprocessId: string })[];
+  /** Get all changelog entries */
+  getChangelog: () => ChangelogEntry[];
 
   // ===== PROCESS MUTATIONS =====
   /** Update a process with partial updates. Persists to localStorage. */
@@ -123,6 +127,7 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
   error: null,
   _subprocessesCache: null,
   _tasksCache: null,
+  changelog: [],
 
   // ===== SETTERS =====
   setProcesses: (processes) => {
@@ -248,6 +253,11 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
     return state._tasksCache || [];
   },
 
+  getChangelog: () => {
+    const state = get();
+    return state.changelog;
+  },
+
   // ===== PROCESS MUTATIONS =====
   updateProcess: (processId, updates) =>
     set((state) => {
@@ -269,6 +279,21 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
 
   updateProcessStatus: (processId, status) =>
     set((state) => {
+      // Find the process to get its current status and name
+      const process = state.processes.find((p) => p.id === processId);
+      if (!process) return state;
+
+      // Create changelog entry
+      const changelogEntry: ChangelogEntry = {
+        id: `changelog-${Date.now()}-${Math.random()}`,
+        itemName: process.name,
+        itemType: "Process",
+        oldStatus: process.status,
+        newStatus: status,
+        changedBy: "user-1",
+        changedAt: new Date().toISOString(),
+      };
+
       // Immutably update only status field
       const updatedProcesses = state.processes.map((p) =>
         p.id === processId
@@ -282,7 +307,10 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
           JSON.stringify(updatedProcesses)
         );
       }
-      return { processes: updatedProcesses };
+      return {
+        processes: updatedProcesses,
+        changelog: [...state.changelog, changelogEntry],
+      };
     }),
 
   // ===== SUBPROCESS MUTATIONS =====
@@ -337,6 +365,24 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
 
   updateSubprocessStatus: (processId, subprocessId, status) =>
     set((state) => {
+      // Find the subprocess to get its current status and name
+      const process = state.processes.find((p) => p.id === processId);
+      const subprocess = process?.subprocesses.find(
+        (sp) => sp.id === subprocessId
+      );
+      if (!subprocess) return state;
+
+      // Create changelog entry
+      const changelogEntry: ChangelogEntry = {
+        id: `changelog-${Date.now()}-${Math.random()}`,
+        itemName: subprocess.name,
+        itemType: "Subprocess",
+        oldStatus: subprocess.status,
+        newStatus: status,
+        changedBy: "user-1",
+        changedAt: new Date().toISOString(),
+      };
+
       // Navigate to nested subprocess and update only status
       const updatedProcesses = state.processes.map((p) =>
         p.id === processId
@@ -377,6 +423,7 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
         processes: updatedProcesses,
         _subprocessesCache: subprocessesCache,
         _tasksCache: tasksCache,
+        changelog: [...state.changelog, changelogEntry],
       };
     }),
 
@@ -439,6 +486,25 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
 
   updateTaskStatus: (processId, subprocessId, taskId, status) =>
     set((state) => {
+      // Find the task and subprocess to get current status and names
+      const process = state.processes.find((p) => p.id === processId);
+      const subprocess = process?.subprocesses.find(
+        (sp) => sp.id === subprocessId
+      );
+      const task = subprocess?.tasks.find((t) => t.id === taskId);
+      if (!task || !subprocess) return state;
+
+      // Create changelog entry for task
+      const taskChangelogEntry: ChangelogEntry = {
+        id: `changelog-${Date.now()}-${Math.random()}`,
+        itemName: task.name,
+        itemType: "Task",
+        oldStatus: task.status,
+        newStatus: status,
+        changedBy: "user-1",
+        changedAt: new Date().toISOString(),
+      };
+
       // Step 1: Update the task status
       const updatedProcesses = state.processes.map((p) =>
         p.id === processId
@@ -465,6 +531,7 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
       );
 
       // Step 2: Auto-calculate parent subprocess status based on all task statuses
+      const changelogEntries: ChangelogEntry[] = [taskChangelogEntry];
       const finalProcesses = updatedProcesses.map((p) =>
         p.id === processId
           ? {
@@ -487,6 +554,19 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
                     subprocessStatus = "Needs Fix";
                   } else {
                     subprocessStatus = "Pending";
+                  }
+
+                  // Log subprocess status change if it changed
+                  if (subprocessStatus !== sp.status) {
+                    changelogEntries.push({
+                      id: `changelog-${Date.now()}-${Math.random()}-sub`,
+                      itemName: sp.name,
+                      itemType: "Subprocess",
+                      oldStatus: sp.status,
+                      newStatus: subprocessStatus,
+                      changedBy: "user-1",
+                      changedAt: new Date().toISOString(),
+                    });
                   }
 
                   return {
@@ -528,6 +608,7 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
         processes: finalProcesses,
         _subprocessesCache: subprocessesCache,
         _tasksCache: tasksCache,
+        changelog: [...state.changelog, ...changelogEntries],
       };
     }),
 

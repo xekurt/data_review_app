@@ -5,6 +5,16 @@ export interface Comment {
   createdAt: string;
 }
 
+export interface ChangelogEntry {
+  id: string;
+  itemName: string;
+  itemType: "Process" | "Subprocess" | "Task";
+  oldStatus: "Pending" | "Approved" | "Needs Fix";
+  newStatus: "Pending" | "Approved" | "Needs Fix";
+  changedBy: string;
+  changedAt: string;
+}
+
 export interface Task {
   id: string;
   name: string;

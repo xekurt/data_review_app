@@ -19,6 +19,7 @@ export const useProcessData = () => {
     (state) => state.updateProcessStatus
   );
   const addProcessComment = useProcessStore((state) => state.addProcessComment);
+  const changelog = useProcessStore((state) => state.getChangelog());
 
   return {
     processes,
@@ -30,6 +31,7 @@ export const useProcessData = () => {
     updateProcess,
     updateProcessStatus,
     addProcessComment,
+    changelog,
   };
 };
 

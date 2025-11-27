@@ -49,3 +49,15 @@ export const createChangelogEntry = (
   changedBy: "user-1",
   changedAt: new Date().toISOString(),
 });
+export const findProcess = (processes: Process[], processId: string) =>
+  processes.find((p) => p.id === processId);
+
+export const findSubprocess = (
+  process: Process | undefined,
+  subprocessId: string
+) => process?.subprocesses.find((sp) => sp.id === subprocessId);
+
+export const findTask = (
+  subprocess: ReturnType<typeof findSubprocess>,
+  taskId: string
+) => subprocess?.tasks.find((t) => t.id === taskId);

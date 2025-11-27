@@ -1,9 +1,4 @@
-import type {
-  Process,
-  Subprocess,
-  Task,
-  ChangelogEntry,
-} from "../types/process";
+import type { Process, Subprocess, Task } from "../types/process";
 
 export interface ProcessStore {
   processes: Process[];
@@ -14,7 +9,6 @@ export interface ProcessStore {
   error: string | null;
   _subprocessesCache: (Subprocess & { processId: string })[] | null;
   _tasksCache: (Task & { processId: string; subprocessId: string })[] | null;
-  changelog: ChangelogEntry[];
 
   setProcesses: (processes: Process[]) => void;
   setSelectedProcess: (process: Process | null) => void;
@@ -29,7 +23,6 @@ export interface ProcessStore {
 
   getSubprocesses: () => (Subprocess & { processId: string })[];
   getTasks: () => (Task & { processId: string; subprocessId: string })[];
-  getChangelog: () => ChangelogEntry[];
 
   updateProcessStatus: (processId: string, status: Process["status"]) => void;
 

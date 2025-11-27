@@ -1,13 +1,19 @@
 import { create } from "zustand";
-import type { Process, Task, ChangelogEntry } from "../types/process";
+import { produce } from "immer";
+
+import type { Process, Task } from "../types/process";
 import {
   createChangelogEntry,
   createComment,
+  findProcess,
+  findSubprocess,
+  findTask,
   persistToStorage,
   recalculateCaches,
   STORAGE_KEYS,
 } from "./helpers";
 import type { ProcessStore } from "./type";
+import { useChangelogStore } from "./changelogStore";
 
 export const useProcessStore = create<ProcessStore>((set, get) => ({
   processes: [],
@@ -18,7 +24,6 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
   error: null,
   _subprocessesCache: null,
   _tasksCache: null,
-  changelog: [],
   initializeProcesses: async () => {
     set({ isLoading: true, error: null });
     try {
@@ -85,14 +90,9 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
     return state._tasksCache || [];
   },
 
-  getChangelog: () => {
-    const state = get();
-    return state.changelog;
-  },
-
   updateProcessStatus: (processId, status) =>
     set((state) => {
-      const process = state.processes.find((p) => p.id === processId);
+      const process = findProcess(state.processes, processId);
       if (!process) return state;
 
       const changelogEntry = createChangelogEntry(
@@ -102,24 +102,25 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
         status
       );
 
-      const updatedProcesses = state.processes.map((p) =>
-        p.id === processId
-          ? { ...p, status, lastUpdatedAt: new Date().toISOString() }
-          : p
-      );
+      const updatedProcesses = produce(state.processes, (draft: Process) => {
+        const processToUpdate = findSubprocess(draft, processId);
+        if (processToUpdate) {
+          processToUpdate.status = status;
+          processToUpdate.lastUpdatedAt = new Date().toISOString();
+        }
+      });
+
       persistToStorage(updatedProcesses);
+      useChangelogStore.getState().addChangelogEntry(changelogEntry);
       return {
         processes: updatedProcesses,
-        changelog: [...state.changelog, changelogEntry],
       };
     }),
 
   updateSubprocessStatus: (processId, subprocessId, status) =>
     set((state) => {
-      const process = state.processes.find((p) => p.id === processId);
-      const subprocess = process?.subprocesses.find(
-        (sp) => sp.id === subprocessId
-      );
+      const process = findProcess(state.processes, processId);
+      const subprocess = findSubprocess(process, subprocessId);
       if (!subprocess) return state;
 
       const changelogEntry = createChangelogEntry(
@@ -129,164 +130,130 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
         status
       );
 
-      const updatedProcesses = state.processes.map((p) =>
-        p.id === processId
-          ? {
-              ...p,
-              subprocesses: p.subprocesses.map((sp) =>
-                sp.id === subprocessId
-                  ? { ...sp, status, lastUpdatedAt: new Date().toISOString() }
-                  : sp
-              ),
-            }
-          : p
-      );
+      const updatedProcesses = produce(state.processes, (draft) => {
+        const processToUpdate = findProcess(draft, processId);
+        if (processToUpdate) {
+          const subprocessToUpdate = findSubprocess(
+            processToUpdate,
+            subprocessId
+          );
+          if (subprocessToUpdate) {
+            subprocessToUpdate.status = status;
+            subprocessToUpdate.lastUpdatedAt = new Date().toISOString();
+          }
+        }
+      });
+
       const { subprocessesCache, tasksCache } =
         recalculateCaches(updatedProcesses);
       persistToStorage(updatedProcesses);
+      useChangelogStore.getState().addChangelogEntry(changelogEntry);
       return {
         processes: updatedProcesses,
         _subprocessesCache: subprocessesCache,
         _tasksCache: tasksCache,
-        changelog: [...state.changelog, changelogEntry],
       };
     }),
 
   updateTaskStatus: (processId, subprocessId, taskId, status) =>
     set((state) => {
-      const process = state.processes.find((p) => p.id === processId);
-      const subprocess = process?.subprocesses.find(
-        (sp) => sp.id === subprocessId
-      );
-      const task = subprocess?.tasks.find((t) => t.id === taskId);
+      const process = findProcess(state.processes, processId);
+      const subprocess = findSubprocess(process, subprocessId);
+      const task = findTask(subprocess, taskId);
       if (!task || !subprocess) return state;
 
-      const changelogEntries: ChangelogEntry[] = [
+      const changelogEntries = [
         createChangelogEntry(task.name, "Task", task.status, status),
       ];
 
-      const updatedProcesses = state.processes.map((p) =>
-        p.id === processId
-          ? {
-              ...p,
-              subprocesses: p.subprocesses.map((sp) =>
-                sp.id === subprocessId
-                  ? {
-                      ...sp,
-                      tasks: sp.tasks.map((t) =>
-                        t.id === taskId
-                          ? {
-                              ...t,
-                              status,
-                              lastUpdatedAt: new Date().toISOString(),
-                            }
-                          : t
-                      ),
-                    }
-                  : sp
-              ),
-            }
-          : p
-      );
+      const updatedProcesses = produce(state.processes, (draft) => {
+        const processToUpdate = findProcess(draft, processId);
+        if (!processToUpdate) return;
 
-      const finalProcesses = updatedProcesses.map((p) =>
-        p.id === processId
-          ? {
-              ...p,
-              subprocesses: p.subprocesses.map((sp) => {
-                if (sp.id === subprocessId) {
-                  const allApproved = sp.tasks.every(
-                    (t) => t.status === "Approved"
-                  );
-                  const anyNeedsFix = sp.tasks.some(
-                    (t) => t.status === "Needs Fix"
-                  );
+        const subprocessToUpdate = findSubprocess(
+          processToUpdate,
+          subprocessId
+        );
+        if (!subprocessToUpdate) return;
 
-                  const subprocessStatus: Task["status"] = allApproved
-                    ? "Approved"
-                    : anyNeedsFix
-                    ? "Needs Fix"
-                    : "Pending";
+        const taskToUpdate = findTask(subprocessToUpdate, taskId);
+        if (taskToUpdate) {
+          taskToUpdate.status = status;
+          taskToUpdate.lastUpdatedAt = new Date().toISOString();
+        }
 
-                  if (subprocessStatus !== sp.status) {
-                    changelogEntries.push(
-                      createChangelogEntry(
-                        sp.name,
-                        "Subprocess",
-                        sp.status,
-                        subprocessStatus
-                      )
-                    );
-                  }
+        const allApproved = subprocessToUpdate.tasks.every(
+          (t) => t.status === "Approved"
+        );
+        const anyNeedsFix = subprocessToUpdate.tasks.some(
+          (t) => t.status === "Needs Fix"
+        );
 
-                  return {
-                    ...sp,
-                    status: subprocessStatus,
-                    lastUpdatedAt: new Date().toISOString(),
-                  };
-                }
-                return sp;
-              }),
-            }
-          : p
-      );
+        const subprocessStatus: Task["status"] = allApproved
+          ? "Approved"
+          : anyNeedsFix
+          ? "Needs Fix"
+          : "Pending";
 
-      const processUpdatedFinal = finalProcesses.map((p) => {
-        if (p.id === processId) {
-          const allSubprocessesApproved = p.subprocesses.every(
-            (sp) => sp.status === "Approved"
+        if (subprocessStatus !== subprocessToUpdate.status) {
+          changelogEntries.push(
+            createChangelogEntry(
+              subprocessToUpdate.name,
+              "Subprocess",
+              subprocessToUpdate.status,
+              subprocessStatus
+            )
           );
-          const allTasksApproved = p.subprocesses.every((sp) =>
-            sp.tasks.every((t) => t.status === "Approved")
-          );
+          subprocessToUpdate.status = subprocessStatus;
+          subprocessToUpdate.lastUpdatedAt = new Date().toISOString();
+        }
 
-          if (allSubprocessesApproved && allTasksApproved) {
-            const newProcessStatus: Process["status"] = "Approved";
+        const allSubprocessesApproved = processToUpdate.subprocesses.every(
+          (sp) => sp.status === "Approved"
+        );
+        const allTasksApproved = processToUpdate.subprocesses.every((sp) =>
+          sp.tasks.every((t) => t.status === "Approved")
+        );
 
-            if (newProcessStatus !== p.status) {
-              changelogEntries.push(
-                createChangelogEntry(
-                  p.name,
-                  "Process",
-                  p.status,
-                  newProcessStatus
-                )
-              );
-            }
+        if (allSubprocessesApproved && allTasksApproved) {
+          const newProcessStatus: Process["status"] = "Approved";
 
-            return {
-              ...p,
-              status: newProcessStatus,
-              lastUpdatedAt: new Date().toISOString(),
-            };
+          if (newProcessStatus !== processToUpdate.status) {
+            changelogEntries.push(
+              createChangelogEntry(
+                processToUpdate.name,
+                "Process",
+                processToUpdate.status,
+                newProcessStatus
+              )
+            );
+            processToUpdate.status = newProcessStatus;
+            processToUpdate.lastUpdatedAt = new Date().toISOString();
           }
         }
-        return p;
       });
 
       const { subprocessesCache, tasksCache } =
-        recalculateCaches(processUpdatedFinal);
-      persistToStorage(processUpdatedFinal);
+        recalculateCaches(updatedProcesses);
+      persistToStorage(updatedProcesses);
+      useChangelogStore.getState().addChangelogEntries(changelogEntries);
       return {
-        processes: processUpdatedFinal,
+        processes: updatedProcesses,
         _subprocessesCache: subprocessesCache,
         _tasksCache: tasksCache,
-        changelog: [...state.changelog, ...changelogEntries],
       };
     }),
 
   addProcessComment: (processId, text, author) =>
     set((state) => {
       const newComment = createComment(text, author);
-      const updatedProcesses = state.processes.map((p) =>
-        p.id === processId
-          ? {
-              ...p,
-              comments: [...p.comments, newComment],
-              lastUpdatedAt: new Date().toISOString(),
-            }
-          : p
-      );
+      const updatedProcesses = produce(state.processes, (draft) => {
+        const processToUpdate = findProcess(draft, processId);
+        if (processToUpdate) {
+          processToUpdate.comments.push(newComment);
+          processToUpdate.lastUpdatedAt = new Date().toISOString();
+        }
+      });
       persistToStorage(updatedProcesses);
       return { processes: updatedProcesses };
     }),
@@ -294,22 +261,19 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
   addSubprocessComment: (processId, subprocessId, text, author) =>
     set((state) => {
       const newComment = createComment(text, author);
-      const updatedProcesses = state.processes.map((p) =>
-        p.id === processId
-          ? {
-              ...p,
-              subprocesses: p.subprocesses.map((sp) =>
-                sp.id === subprocessId
-                  ? {
-                      ...sp,
-                      comments: [...sp.comments, newComment],
-                      lastUpdatedAt: new Date().toISOString(),
-                    }
-                  : sp
-              ),
-            }
-          : p
-      );
+      const updatedProcesses = produce(state.processes, (draft) => {
+        const processToUpdate = findProcess(draft, processId);
+        if (processToUpdate) {
+          const subprocessToUpdate = findSubprocess(
+            processToUpdate,
+            subprocessId
+          );
+          if (subprocessToUpdate) {
+            subprocessToUpdate.comments.push(newComment);
+            subprocessToUpdate.lastUpdatedAt = new Date().toISOString();
+          }
+        }
+      });
       const { subprocessesCache } = recalculateCaches(updatedProcesses);
       persistToStorage(updatedProcesses);
       return {
@@ -321,29 +285,22 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
   addTaskComment: (processId, subprocessId, taskId, text, author) =>
     set((state) => {
       const newComment = createComment(text, author);
-      const updatedProcesses = state.processes.map((p) =>
-        p.id === processId
-          ? {
-              ...p,
-              subprocesses: p.subprocesses.map((sp) =>
-                sp.id === subprocessId
-                  ? {
-                      ...sp,
-                      tasks: sp.tasks.map((t) =>
-                        t.id === taskId
-                          ? {
-                              ...t,
-                              comments: [...t.comments, newComment],
-                              lastUpdatedAt: new Date().toISOString(),
-                            }
-                          : t
-                      ),
-                    }
-                  : sp
-              ),
+      const updatedProcesses = produce(state.processes, (draft) => {
+        const processToUpdate = findProcess(draft, processId);
+        if (processToUpdate) {
+          const subprocessToUpdate = findSubprocess(
+            processToUpdate,
+            subprocessId
+          );
+          if (subprocessToUpdate) {
+            const taskToUpdate = findTask(subprocessToUpdate, taskId);
+            if (taskToUpdate) {
+              taskToUpdate.comments.push(newComment);
+              taskToUpdate.lastUpdatedAt = new Date().toISOString();
             }
-          : p
-      );
+          }
+        }
+      });
       const { tasksCache } = recalculateCaches(updatedProcesses);
       persistToStorage(updatedProcesses);
       return { processes: updatedProcesses, _tasksCache: tasksCache };

@@ -7,8 +7,8 @@ export interface ProcessStore {
   selectedTask: (Task & { processId: string; subprocessId: string }) | null;
   isLoading: boolean;
   error: string | null;
-  _subprocessesCache: (Subprocess & { processId: string })[] | null;
-  _tasksCache: (Task & { processId: string; subprocessId: string })[] | null;
+  _subprocessesCache: (Subprocess & { processId: string })[];
+  _tasksCache: (Task & { processId: string; subprocessId: string })[];
 
   setProcesses: (processes: Process[]) => void;
   setSelectedProcess: (process: Process | null) => void;

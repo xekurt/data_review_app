@@ -22,24 +22,31 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
   selectedTask: null,
   isLoading: false,
   error: null,
-  _subprocessesCache: null,
-  _tasksCache: null,
+  _subprocessesCache: [],
+  _tasksCache: [],
   initializeProcesses: async () => {
     set({ isLoading: true, error: null });
     try {
       if (typeof window !== "undefined") {
         const cached = localStorage.getItem(STORAGE_KEYS.PROCESSES);
         if (cached) {
-          const processes = JSON.parse(cached);
-          const { subprocessesCache, tasksCache } =
-            recalculateCaches(processes);
-          set({
-            processes,
-            _subprocessesCache: subprocessesCache,
-            _tasksCache: tasksCache,
-            isLoading: false,
-          });
-          return;
+          try {
+            const processes = JSON.parse(cached);
+            if (Array.isArray(processes) && processes.length > 0) {
+              const { subprocessesCache, tasksCache } =
+                recalculateCaches(processes);
+              set({
+                processes,
+                _subprocessesCache: subprocessesCache,
+                _tasksCache: tasksCache,
+                isLoading: false,
+              });
+              return;
+            }
+          } catch (parseError) {
+            console.error("Failed to parse cached data:", parseError);
+            localStorage.removeItem(STORAGE_KEYS.PROCESSES);
+          }
         }
       }
 

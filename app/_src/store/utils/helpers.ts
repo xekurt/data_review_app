@@ -11,20 +11,30 @@ export const STORAGE_KEYS = {
 } as const;
 
 export const recalculateCaches = (processes: Process[]) => {
+  if (!Array.isArray(processes) || processes.length === 0) {
+    return { subprocessesCache: [], tasksCache: [] };
+  }
+
   const subprocessesCache = processes.flatMap((p) =>
-    p.subprocesses.map((sp) => ({
-      ...sp,
-      processId: p.id,
-    }))
+    Array.isArray(p.subprocesses)
+      ? p.subprocesses.map((sp) => ({
+          ...sp,
+          processId: p.id,
+        }))
+      : []
   );
   const tasksCache = processes.flatMap((p) =>
-    p.subprocesses.flatMap((sp) =>
-      sp.tasks.map((t) => ({
-        ...t,
-        processId: p.id,
-        subprocessId: sp.id,
-      }))
-    )
+    Array.isArray(p.subprocesses)
+      ? p.subprocesses.flatMap((sp) =>
+          Array.isArray(sp.tasks)
+            ? sp.tasks.map((t) => ({
+                ...t,
+                processId: p.id,
+                subprocessId: sp.id,
+              }))
+            : []
+        )
+      : []
   );
   return { subprocessesCache, tasksCache };
 };

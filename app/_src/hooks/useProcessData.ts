@@ -35,7 +35,9 @@ export const useProcessData = () => {
 /* ===== SUBPROCESS HOOK ===== */
 
 export const useSubprocessData = () => {
-  const subprocesses = useProcessStore((state) => state.getSubprocesses());
+  const subprocesses = useProcessStore(
+    (state) => state._subprocessesCache || []
+  );
   const selectedSubprocess = useProcessStore(
     (state) => state.selectedSubprocess
   );
@@ -63,7 +65,7 @@ export const useSubprocessData = () => {
 /* ===== TASK HOOK ===== */
 
 export const useTaskData = () => {
-  const tasks = useProcessStore((state) => state.getTasks());
+  const tasks = useProcessStore((state) => state._tasksCache || []);
   const selectedTask = useProcessStore((state) => state.selectedTask);
   const setSelectedTask = useProcessStore((state) => state.setSelectedTask);
 

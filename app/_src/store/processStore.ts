@@ -102,8 +102,9 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
         status
       );
 
-      const updatedProcesses = produce(state.processes, (draft: Process) => {
-        const processToUpdate = findSubprocess(draft, processId);
+      const updatedProcesses = produce(state.processes, (draft: Process[]) => {
+        console.info("draft: ", draft);
+        const processToUpdate = findProcess(draft, processId);
         if (processToUpdate) {
           processToUpdate.status = status;
           processToUpdate.lastUpdatedAt = new Date().toISOString();

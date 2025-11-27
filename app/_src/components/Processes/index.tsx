@@ -17,6 +17,7 @@ export default function Processes() {
     selectedProcess,
     setSelectedProcess,
     addProcessComment,
+    updateProcessStatus,
   } = useProcessData();
 
   if (isLoading) return <div className="p-6">Loading processes...</div>;
@@ -53,6 +54,24 @@ export default function Processes() {
                   completed={subprocessProgress.approved}
                 />
               </div>
+
+              {process.status === "Pending" && (
+                <div className="mt-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg flex items-center justify-between">
+                  <p className="text-sm text-green-800 dark:text-green-200">
+                    All tasks and subprocesses are approved. Ready to approve
+                    this process?
+                  </p>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      updateProcessStatus(process.id, "Approved");
+                    }}
+                    className="ml-4 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors whitespace-nowrap"
+                  >
+                    Approve Process
+                  </button>
+                </div>
+              )}
 
               <Comments
                 comments={process.comments}

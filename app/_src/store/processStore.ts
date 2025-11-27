@@ -215,21 +215,20 @@ export const useProcessStore = create<ProcessStore>((set, get) => ({
           (sp: Subprocess) => sp.tasks.every((t) => t.status === "Approved")
         );
 
-        if (allSubprocessesApproved && allTasksApproved) {
-          const newProcessStatus: Process["status"] = "Approved";
+        const newProcessStatus: Process["status"] =
+          allSubprocessesApproved && allTasksApproved ? "Pending" : "Needs Fix";
 
-          if (newProcessStatus !== processToUpdate.status) {
-            changelogEntries.push(
-              createChangelogEntry(
-                processToUpdate.name,
-                "Process",
-                processToUpdate.status,
-                newProcessStatus
-              )
-            );
-            processToUpdate.status = newProcessStatus;
-            processToUpdate.lastUpdatedAt = new Date().toISOString();
-          }
+        if (newProcessStatus !== processToUpdate.status) {
+          changelogEntries.push(
+            createChangelogEntry(
+              processToUpdate.name,
+              "Process",
+              processToUpdate.status,
+              newProcessStatus
+            )
+          );
+          processToUpdate.status = newProcessStatus;
+          processToUpdate.lastUpdatedAt = new Date().toISOString();
         }
       });
 

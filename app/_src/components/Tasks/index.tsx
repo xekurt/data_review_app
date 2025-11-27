@@ -3,8 +3,8 @@
 import { useProcessData } from "../../hooks/useProcessData";
 import { useSubprocessData } from "../../hooks/useProcessData";
 import { useTaskData } from "../../hooks/useProcessData";
-import ListItem from "../ListItem";
-import Comments from "../Comments";
+import ListItem from "../common/ListItem";
+import Comments from "../common/Comments";
 
 export default function Tasks() {
   const { selectedProcess } = useProcessData();

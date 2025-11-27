@@ -1,13 +1,14 @@
 "use client";
 
 import { useProcessData } from "../../hooks/useProcessData";
-import ListItem from "../ListItem";
-import ProgressHint from "../ProgressHint";
-import Comments from "../Comments";
+import ListItem from "../common/ListItem";
+import ProgressHint from "../common/ProgressHint";
+
 import {
   getProcessTaskProgress,
   getProcessSubprocessProgress,
 } from "../../utils/progress";
+import Comments from "../common/Comments";
 
 export default function Processes() {
   const {

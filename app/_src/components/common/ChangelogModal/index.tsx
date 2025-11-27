@@ -1,7 +1,7 @@
 "use client";
 
-import { ChangelogEntry } from "../../types/process";
-import { formatDate } from "../../utils/formatters";
+import { ChangelogEntry } from "../../../types/process";
+import { formatDate } from "../../../utils/formatters";
 
 interface ChangelogModalProps {
   entries: ChangelogEntry[];

@@ -1,72 +1,68 @@
 "use client";
 
-import { Task } from "../../types/process";
+import { ReactNode } from "react";
 
-interface StatusSelectProps {
-  status: Task["status"];
-  onStatusChange: (status: Task["status"]) => void;
+interface SelectInputProps<T extends string> {
+  value: T;
+  options: readonly T[];
+  onChange: (value: T) => void;
   disabled?: boolean;
+  ariaLabel?: string;
+  getColorClass?: (value: T) => string;
+  renderOption?: (option: T) => ReactNode;
 }
 
-const statusOptions: Task["status"][] = ["Pending", "Approved", "Needs Fix"];
-
-const statusColors = {
-  Pending:
-    "bg-yellow-900 dark:bg-yellow-900/30 text-yellow-100 border-yellow-300 dark:border-yellow-700",
-  Approved:
-    "bg-green-900 dark:bg-green-900/30 text-green-100 border-green-300 dark:border-green-700",
-  "Needs Fix":
-    "bg-red-900 dark:bg-red-900/30 text-red-100 border-red-300 dark:border-red-700",
-};
-
-export default function StatusSelect({
-  status,
-  onStatusChange,
+export default function SelectInput<T extends string>({
+  value,
+  options,
+  onChange,
   disabled = false,
-}: StatusSelectProps) {
+  ariaLabel,
+  getColorClass,
+  renderOption,
+}: SelectInputProps<T>) {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     e.stopPropagation();
-    onStatusChange(e.target.value as Task["status"]);
+    onChange(e.target.value as T);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLSelectElement>) => {
     e.stopPropagation();
 
-    // Cycle through statuses with arrow keys
     if (disabled) return;
 
-    const currentIndex = statusOptions.indexOf(status);
+    const currentIndex = options.indexOf(value);
 
     if (e.key === "ArrowRight" || e.key === "ArrowDown") {
       e.preventDefault();
-      const nextIndex = (currentIndex + 1) % statusOptions.length;
-      onStatusChange(statusOptions[nextIndex]);
+      const nextIndex = (currentIndex + 1) % options.length;
+      onChange(options[nextIndex]);
     } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
       e.preventDefault();
-      const prevIndex =
-        (currentIndex - 1 + statusOptions.length) % statusOptions.length;
-      onStatusChange(statusOptions[prevIndex]);
+      const prevIndex = (currentIndex - 1 + options.length) % options.length;
+      onChange(options[prevIndex]);
     } else if (e.key === "Enter" || e.key === " ") {
-      // Let the native select behavior handle opening the dropdown
       e.stopPropagation();
     }
   };
 
+  const colorClass = getColorClass ? getColorClass(value) : "";
+
   return (
     <div className="relative inline-block">
       <select
-        value={status}
+        value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         disabled={disabled}
         onClick={(e) => e.stopPropagation()}
-        aria-label={`Change task status. Current status: ${status}`}
+        aria-label={ariaLabel || `Select option. Current: ${value}`}
         tabIndex={disabled ? -1 : 0}
         className={`
           appearance-none text-xs font-semibold px-3 py-1.5 pr-7 rounded-md 
           border-2 cursor-pointer transition-all duration-200 whitespace-nowrap
           [&>option]:cursor-pointer
-          ${statusColors[status]}
+          ${colorClass}
           ${
             disabled
               ? "opacity-50 cursor-not-allowed"
@@ -80,13 +76,13 @@ export default function StatusSelect({
           backgroundSize: "1.25rem 1.25rem",
         }}
       >
-        {statusOptions.map((option) => (
+        {options.map((option) => (
           <option
             key={option}
             value={option}
             className="cursor-pointer bg-background text-black dark:text-white"
           >
-            {option}
+            {renderOption ? renderOption(option) : option}
           </option>
         ))}
       </select>

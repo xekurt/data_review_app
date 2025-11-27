@@ -5,7 +5,7 @@ import Header from "./_src/components/header";
 import Processes from "./_src/components/Processes";
 import Subprocesses from "./_src/components/Subprocesses";
 import Tasks from "./_src/components/Tasks";
-import ChangelogModal from "./_src/components/ChangelogModal";
+import ChangelogModal from "./_src/components/common/ChangelogModal";
 import { useInitializeProcesses } from "./_src/hooks/useProcessData";
 import { useChangelogData } from "./_src/hooks/useChangelogData";
 

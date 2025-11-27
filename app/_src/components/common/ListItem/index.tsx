@@ -1,9 +1,9 @@
 "use client";
 
 import { ReactNode } from "react";
-import { formatDate } from "../../utils/formatters";
-import StatusSelect from "../StatusSelect";
-import { Task } from "../../types/process";
+import { formatDate } from "../../../utils/formatters";
+import StatusSelect from "../../Tasks/StatusSelect";
+import { Task } from "../../../types/process";
 
 interface ListItemProps {
   title: string;

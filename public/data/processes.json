@@ -3,7 +3,7 @@
     "id": "process-1",
     "name": "Data Ingestion",
     "description": "Collect and validate raw data from multiple sources.",
-    "status": "Approved",
+    "status": "Needs Fix",
     "lastUpdatedBy": "alice",
     "lastUpdatedAt": "2025-11-20T10:15:00Z",
     "subprocesses": [
@@ -99,7 +99,7 @@
     "id": "process-2",
     "name": "Data Processing",
     "description": "Transform and enrich data for downstream use.",
-    "status": "Pending",
+    "status": "Needs Fix",
     "lastUpdatedBy": "dave",
     "lastUpdatedAt": "2025-11-23T14:00:00Z",
     "subprocesses": [

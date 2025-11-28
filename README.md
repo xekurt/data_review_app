@@ -206,7 +206,7 @@ npm run deploy
 
 **Subprocess → Process**:
 
-- All subprocesses "Approved" AND all tasks "Approved" → Process becomes "Approved"
+- All subprocesses "Approved" AND all tasks "Approved" → Process becomes "Pending" (needs manual submission)
 - Any subprocess "Needs Fix" → Process becomes "Needs Fix"
 - Otherwise → Process remains "Pending"
 
